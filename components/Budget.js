@@ -6,10 +6,10 @@ const Budget = () => {
 
   return (
     <View style={styles.container}>
-      <Text>My Budget</Text>
+      <Text style={styles.text}>My Spendings Today</Text>
       <TextInput
         onChangeText={(text) => onChangeText(text)}
-        value={value}
+        placeholder={value}
         style={styles.textInput}
       ></TextInput>
     </View>
@@ -23,6 +23,13 @@ const styles = StyleSheet.create({
 
   textInput: {
     backgroundColor: "#eee",
+    fontSize: 16,
+    marginTop: 10,
+  },
+
+  text: {
+    fontSize: 16,
+    marginTop: 10,
   },
 });
 
