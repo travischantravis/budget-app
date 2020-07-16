@@ -3,22 +3,24 @@ import React from "react";
 import { StyleSheet, Text, View, SafeAreaView } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import HomeScreen from "./screens/HomeScreen";
 import AboutScreen from "./screens/AboutScreen";
-import SpendingScreen from "./screens/SpendingScreen";
+import DayScreen from "./screens/DayScreen";
+import WeekScreen from "./screens/WeekScreen";
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
     <View style={styles.container}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="My Spendings">
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="About" component={AboutScreen} />
-          <Stack.Screen name="My Spendings" component={SpendingScreen} />
-        </Stack.Navigator>
+        <Drawer.Navigator initialRouteName="This week">
+          <Drawer.Screen name="This week" component={WeekScreen} />
+          <Drawer.Screen name="Today" component={DayScreen} />
+        </Drawer.Navigator>
       </NavigationContainer>
     </View>
   );
@@ -28,5 +30,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    marginTop: 20,
   },
 });

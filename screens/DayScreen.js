@@ -34,12 +34,12 @@ const SpendingData = [
   },
 ];
 
-const SpendingScreen = () => {
+const DayScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [spendings, setSpendings] = useState(SpendingData);
 
   const openAddSpendingForm = () => {
-    console.log("open");
+    // console.log("open");
     setModalVisible(true);
   };
 
@@ -65,13 +65,13 @@ const SpendingScreen = () => {
 
       <View style={styles.mainContainer}>
         <View style={styles.topContainer}>
-          <Text style={styles.totalSpendingsTitle}>Total spendings</Text>
+          <Text style={styles.topContainerTitle}>Total spendings today</Text>
           <Text style={styles.totalSpendings}>
             ${calculateTotalSpending(spendings).toFixed(2)}
           </Text>
         </View>
         <View style={styles.midContainer}>
-          <Text style={styles.recentSpendingsTitle}>Recent spendings</Text>
+          <Text style={styles.midContainerTitle}>Recent spendings</Text>
           <FlatList
             data={spendings}
             renderItem={renderSpending}
@@ -121,17 +121,20 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     backgroundColor: "#fff",
-    padding: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
   },
   midContainer: {
     backgroundColor: "#eee",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    padding: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+
     flex: 1,
   },
 
-  totalSpendingsTitle: {
+  topContainerTitle: {
     color: "#999",
     fontWeight: "bold",
     fontSize: 20,
@@ -142,7 +145,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
   },
 
-  recentSpendingsTitle: {
+  midContainerTitle: {
     fontWeight: "bold",
     fontSize: 20,
     color: "#999",
@@ -189,4 +192,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SpendingScreen;
+export default DayScreen;
