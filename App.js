@@ -14,9 +14,9 @@ export default function App() {
   return (
     <View style={styles.container}>
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="This week">
-          <Drawer.Screen name="This week" component={WeekScreen} />
-          <Drawer.Screen name="Today" component={DayScreen} />
+        <Drawer.Navigator initialRouteName="Week">
+          <Drawer.Screen name="Week" component={WeekScreen} />
+          <Drawer.Screen name="Day" component={DayScreen} />
         </Drawer.Navigator>
       </NavigationContainer>
     </View>

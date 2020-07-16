@@ -22,6 +22,6 @@ export default generateWeekData = (data) => {
     });
   }
 
-  // console.log(result1);
+  // console.log(result);
   return result1;
 };

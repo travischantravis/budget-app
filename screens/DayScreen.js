@@ -12,15 +12,22 @@ import {
   Button,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import moment from "moment";
 
 import SpendingItem from "../components/SpendingItem";
 import SpendingItemForm from "../components/SpendingItemForm";
 import dummyData from "../utilities/dummyData";
 import generateTotalSpending from "../utilities/generateTotalSpending";
+import generateDayData from "../utilities/generateDayData";
 
-const DayScreen = () => {
+const DayScreen = ({ route }) => {
+  console.log(route.params.date);
+
+  const date = new Date(2020, 6, 15);
+  // const date = route ? route.params.date : new Date(2020, 6, 15);
+  // console.log(date);
   const [modalVisible, setModalVisible] = useState(false);
-  const [spendings, setSpendings] = useState(dummyData);
+  const [spendings, setSpendings] = useState(generateDayData(dummyData, date));
 
   const openAddSpendingForm = () => {
     // console.log("open");
@@ -43,8 +50,10 @@ const DayScreen = () => {
 
       <View style={styles.mainContainer}>
         <View style={styles.topContainer}>
-          <Text style={styles.topContainerTitle}>Total spendings today</Text>
-          <Text style={styles.totalSpendings}>
+          <Text style={styles.topContainerTitle}>
+            Total spendings on {moment(date).format("ddd, D MMM")}
+          </Text>
+          <Text style={styles.totalSpending}>
             ${generateTotalSpending(spendings, "price").toFixed(2)}
           </Text>
         </View>
@@ -117,7 +126,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
   },
-  totalSpendings: {
+  totalSpending: {
     color: "#000",
     fontWeight: "bold",
     fontSize: 40,

@@ -6,13 +6,18 @@ import dummyData from "../utilities/dummyData";
 import generateWeekData from "../utilities/generateWeekData";
 import generateTotalSpending from "../utilities/generateTotalSpending";
 
-const WeekScreen = () => {
+const WeekScreen = ({ navigation }) => {
   const [weeklySpendings, setweeklySpendings] = useState(
     generateWeekData(dummyData)
   );
-  // console.log(weeklySpendings);
+  console.log(weeklySpendings);
 
-  const renderDays = ({ item }) => <DaySummary item={item} />;
+  const renderDays = ({ item }) => (
+    <DaySummary
+      item={item}
+      onPress={navigation.navigate("Day", { date: item.date })}
+    />
+  );
 
   return (
     <>

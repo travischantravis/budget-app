@@ -1,10 +1,11 @@
-// custom data
+// Custom data
+// month starts at 0, ends at 11
 export default dummyData = [
   {
     name: "Chipotle",
     price: 7.85,
     id: "1",
-    date: new Date(2020, 6, 14),
+    date: new Date(2020, 6, 14), // July 14, 2020
   },
   {
     name: "Banana",
