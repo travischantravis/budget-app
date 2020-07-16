@@ -1,9 +1,22 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, FlatList } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  TextInput,
+  Modal,
+  Button,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
-import SpendingItem from "../components/SpendingItem";
 
-const ItemData = [
+import SpendingItem from "../components/SpendingItem";
+import SpendingItemForm from "../components/SpendingItemForm";
+
+const SpendingData = [
   {
     name: "Chipotle",
     price: 7.85,
@@ -22,11 +35,27 @@ const ItemData = [
 ];
 
 const SpendingScreen = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [spendings, setSpendings] = useState(SpendingData);
+
+  const openAddSpendingForm = () => {
+    console.log("open");
+    setModalVisible(true);
+  };
+
+  const addSpendingItem = (spendingItem) => {
+    spendingItem.id = Math.random().toString();
+    setSpendings((currentItems) => {
+      return [spendingItem, ...currentItems];
+    });
+    setModalVisible(false);
+  };
+
   const renderSpending = ({ item }) => <SpendingItem item={item} />;
 
   const calculateTotalSpending = (items) => {
     let sum = 0;
-    Object.values(items).forEach((item) => (sum += item.price));
+    Object.values(items).forEach((item) => (sum += parseFloat(item.price)));
     return sum;
   };
 
@@ -38,16 +67,47 @@ const SpendingScreen = () => {
         <View style={styles.topContainer}>
           <Text style={styles.totalSpendingsTitle}>Total spendings</Text>
           <Text style={styles.totalSpendings}>
-            ${calculateTotalSpending(ItemData).toFixed(2)}
+            ${calculateTotalSpending(spendings).toFixed(2)}
           </Text>
         </View>
         <View style={styles.midContainer}>
           <Text style={styles.recentSpendingsTitle}>Recent spendings</Text>
           <FlatList
-            data={ItemData}
+            data={spendings}
             renderItem={renderSpending}
             keyExtractor={(item) => item.id}
           />
+          <TouchableHighlight
+            style={styles.openButtonContainer}
+            onPress={openAddSpendingForm}
+            underlayColor="dodgerblue"
+            activeOpacity={0.2}
+          >
+            <Text style={styles.openButtonText}>+</Text>
+          </TouchableHighlight>
+          <Modal
+            visible={modalVisible}
+            animationType="slide"
+            transparent="true"
+          >
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                setModalVisible(false);
+              }}
+              style={{ width: "100%", height: "100%" }}
+            >
+              <TouchableWithoutFeedback>
+                <View style={styles.modalContainer}>
+                  <SpendingItemForm addSpendingItem={addSpendingItem} />
+                  <Button
+                    onPress={() => setModalVisible(false)}
+                    title="Close"
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+            </TouchableOpacity>
+          </Modal>
         </View>
       </View>
     </>
@@ -57,6 +117,7 @@ const SpendingScreen = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: "#fff",
   },
   topContainer: {
     backgroundColor: "#fff",
@@ -64,8 +125,8 @@ const styles = StyleSheet.create({
   },
   midContainer: {
     backgroundColor: "#eee",
-    borderRadius: 20,
-    borderColor: "#eee",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     padding: 30,
     flex: 1,
   },
@@ -86,6 +147,45 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#999",
     marginBottom: 10,
+  },
+
+  openButtonContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "dodgerblue",
+    position: "absolute",
+    bottom: 25,
+    right: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  openButtonText: {
+    color: "#fff",
+    fontSize: 30,
+  },
+  modalCenterView: {
+    opacity: 0,
+  },
+  modalContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 30,
+    paddingBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    // position: "absolute",
+    width: "100%",
+    top: 20,
+    // bottom: 25,
   },
 });
 

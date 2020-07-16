@@ -6,7 +6,7 @@ const SpendingItem = ({ item }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.spendingName}>{item.name}</Text>
-      <Text style={styles.price}>${item.price.toFixed(2)}</Text>
+      <Text style={styles.price}>${parseFloat(item.price).toFixed(2)}</Text>
     </View>
   );
 };
