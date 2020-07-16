@@ -1,13 +1,16 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import moment from "moment";
 
-const DaySummary = ({ dayInfo }) => {
-  console.log(dayInfo);
+const DaySummary = ({ item }) => {
+  // console.log(item);
   return (
     <View style={styles.container}>
-      <Text style={styles.dayTitle}>{dayInfo.day}</Text>
-      <Text style={styles.totalSpendings}>
-        ${parseFloat(dayInfo.totalSpendings).toFixed(2)}
+      <Text style={styles.dayTitle}>
+        {moment(item.date).format("ddd, D MMM")}
+      </Text>
+      <Text style={styles.totalSpending}>
+        ${parseFloat(item.totalSpending).toFixed(2)}
       </Text>
     </View>
   );
@@ -29,7 +32,7 @@ const styles = StyleSheet.create({
     flex: 3,
     fontSize: 16,
   },
-  totalSpendings: {
+  totalSpending: {
     flex: 1,
     textAlign: "right",
     fontSize: 16,

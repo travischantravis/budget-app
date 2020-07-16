@@ -15,28 +15,12 @@ import { StatusBar } from "expo-status-bar";
 
 import SpendingItem from "../components/SpendingItem";
 import SpendingItemForm from "../components/SpendingItemForm";
-
-const SpendingData = [
-  {
-    name: "Chipotle",
-    price: 7.85,
-    id: "1",
-  },
-  {
-    name: "Banana",
-    price: 1.65,
-    id: "2",
-  },
-  {
-    name: "Chicken Thighs",
-    price: 5.0,
-    id: "3",
-  },
-];
+import dummyData from "../utilities/dummyData";
+import generateTotalSpending from "../utilities/generateTotalSpending";
 
 const DayScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [spendings, setSpendings] = useState(SpendingData);
+  const [spendings, setSpendings] = useState(dummyData);
 
   const openAddSpendingForm = () => {
     // console.log("open");
@@ -53,12 +37,6 @@ const DayScreen = () => {
 
   const renderSpending = ({ item }) => <SpendingItem item={item} />;
 
-  const calculateTotalSpending = (items) => {
-    let sum = 0;
-    Object.values(items).forEach((item) => (sum += parseFloat(item.price)));
-    return sum;
-  };
-
   return (
     <>
       <StatusBar style="auto" />
@@ -67,7 +45,7 @@ const DayScreen = () => {
         <View style={styles.topContainer}>
           <Text style={styles.topContainerTitle}>Total spendings today</Text>
           <Text style={styles.totalSpendings}>
-            ${calculateTotalSpending(spendings).toFixed(2)}
+            ${generateTotalSpending(spendings, "price").toFixed(2)}
           </Text>
         </View>
         <View style={styles.midContainer}>

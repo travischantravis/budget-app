@@ -1,9 +1,19 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, FlatList } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import DaySummary from "../components/DaySummary";
+import dummyData from "../utilities/dummyData";
+import generateWeekData from "../utilities/generateWeekData";
+import generateTotalSpending from "../utilities/generateTotalSpending";
 
 const WeekScreen = () => {
+  const [weeklySpendings, setweeklySpendings] = useState(
+    generateWeekData(dummyData)
+  );
+  // console.log(weeklySpendings);
+
+  const renderDays = ({ item }) => <DaySummary item={item} />;
+
   return (
     <>
       <StatusBar style="auto" />
@@ -12,12 +22,18 @@ const WeekScreen = () => {
           <Text style={styles.topContainerTitle}>
             Total spendings this week
           </Text>
-          <Text style={styles.totalSpendings}>$15.80</Text>
+          <Text style={styles.totalSpending}>
+            $
+            {generateTotalSpending(weeklySpendings, "totalSpending").toFixed(2)}
+          </Text>
         </View>
         <View style={styles.midContainer}>
           <Text style={styles.midContainerTitle}>This week's activity</Text>
-          <DaySummary dayInfo={{ day: "Sunday", totalSpendings: 15.8 }} />
-          <DaySummary dayInfo={{ day: "Monday", totalSpendings: 7.5 }} />
+          <FlatList
+            data={weeklySpendings}
+            renderItem={renderDays}
+            keyExtractor={(item) => item.date}
+          />
         </View>
       </View>
     </>
@@ -51,7 +67,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
   },
-  totalSpendings: {
+  totalSpending: {
     color: "#000",
     fontWeight: "bold",
     fontSize: 40,
