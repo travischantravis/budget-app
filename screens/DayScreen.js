@@ -29,6 +29,8 @@ const DayScreen = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [spendings, setSpendings] = useState(generateDayData(dummyData, date));
 
+  // console.log(spendings);
+
   const openAddSpendingForm = () => {
     // console.log("open");
     setModalVisible(true);

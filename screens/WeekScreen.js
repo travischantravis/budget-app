@@ -10,7 +10,7 @@ const WeekScreen = ({ navigation }) => {
   const [weeklySpendings, setweeklySpendings] = useState(
     generateWeekData(dummyData)
   );
-  console.log(weeklySpendings);
+  // console.log(weeklySpendings);
 
   const renderDays = ({ item }) => (
     <DaySummary
