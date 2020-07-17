@@ -21,14 +21,11 @@ import generateTotalSpending from "../utilities/generateTotalSpending";
 import generateDayData from "../utilities/generateDayData";
 
 const DayScreen = ({ route }) => {
-  console.log(route.params.date);
-
-  const date = new Date(2020, 6, 15);
-  // const date = route ? route.params.date : new Date(2020, 6, 15);
+  const date = new Date(route.params.date);
   // console.log(date);
   const [modalVisible, setModalVisible] = useState(false);
   const [spendings, setSpendings] = useState(generateDayData(dummyData, date));
-
+  // console.log(generateDayData(dummyData, date));
   // console.log(spendings);
 
   const openAddSpendingForm = () => {

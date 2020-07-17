@@ -1,5 +1,6 @@
 // Receive all spending data of one week
 // Return the total spending of each day of the week
+import moment from "moment";
 
 export default generateWeekData = (data) => {
   // console.log(data);
@@ -15,13 +16,13 @@ export default generateWeekData = (data) => {
   let result1 = [];
   for (let date in result) {
     result1.push({
-      date: date,
+      date: new Date(date),
       totalSpending: result[date].reduce((a, b) => {
         return a + b;
       }),
     });
   }
 
-  // console.log(result);
+  // console.log(result1);
   return result1;
 };

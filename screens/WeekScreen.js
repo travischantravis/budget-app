@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import DaySummary from "../components/DaySummary";
 import dummyData from "../utilities/dummyData";
@@ -13,10 +19,11 @@ const WeekScreen = ({ navigation }) => {
   // console.log(weeklySpendings);
 
   const renderDays = ({ item }) => (
-    <DaySummary
-      item={item}
-      onPress={navigation.navigate("Day", { date: item.date })}
-    />
+    <TouchableOpacity
+      onPress={() => navigation.push("Daily", { date: item.date })}
+    >
+      <DaySummary item={item} />
+    </TouchableOpacity>
   );
 
   return (
