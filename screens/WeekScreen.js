@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,30 +10,33 @@ import { StatusBar } from "expo-status-bar";
 import DaySummary from "../components/DaySummary";
 import dummyData from "../utilities/dummyData";
 import generateWeekData from "../utilities/generateWeekData";
+import generateWeekData1 from "../utilities/generateWeekData1";
 import generateTotalSpending from "../utilities/generateTotalSpending";
+import myFirebase from "../configFiles/firebase";
 
 const WeekScreen = ({ navigation }) => {
-  const [weeklySpendings, setweeklySpendings] = useState(
-    generateWeekData(dummyData)
-  );
+  // const [weeklySpendings, setweeklySpendings] = useState(
+  //   generateWeekData(dummyData)
+  // );
   // console.log(weeklySpendings);
+  const [weeklySpendings, setweeklySpendings] = useState();
 
-  async function getFromApi() {
-    fetch("http://localhost:5000/spendings-138e4/us-central1/app/api/test")
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log(responseJson);
-        return responseJson;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-  getFromApi();
+  // Firebase
+  const dbh = myFirebase.firestore();
+
+  const getAllSpendings = async () => {
+    const snapshot = await dbh.collection("spendings").get();
+    const data = snapshot.docs.map((doc) => doc.data());
+    setweeklySpendings(generateWeekData1(data));
+  };
+  useEffect(() => {
+    getAllSpendings();
+    console.log(weeklySpendings);
+  }, []);
 
   const renderDays = ({ item }) => (
     <TouchableOpacity
-      onPress={() => navigation.push("Daily", { date: item.date })}
+      onPress={() => navigation.push("Daily", { date: item.timestamp })}
     >
       <DaySummary item={item} />
     </TouchableOpacity>
@@ -57,7 +60,7 @@ const WeekScreen = ({ navigation }) => {
           <FlatList
             data={weeklySpendings}
             renderItem={renderDays}
-            keyExtractor={(item) => item.date.toString()}
+            keyExtractor={(item) => item.timestamp.toString()}
           />
         </View>
       </View>
