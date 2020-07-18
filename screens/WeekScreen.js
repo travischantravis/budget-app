@@ -5,10 +5,14 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   RefreshControl,
+  Modal,
+  Button,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import DaySummary from "../components/DaySummary";
+import SpendingItemForm from "../components/SpendingItemForm";
 import generateWeekData from "../utilities/generateWeekData";
 import generateTotalSpending from "../utilities/generateTotalSpending";
 import myFirebase from "../configFiles/firebase";
@@ -16,6 +20,7 @@ import myFirebase from "../configFiles/firebase";
 const WeekScreen = ({ navigation }) => {
   const [weeklySpendings, setWeeklySpendings] = useState();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const dbh = myFirebase.firestore();
 
   const getAllSpendings = () => {
@@ -57,6 +62,11 @@ const WeekScreen = ({ navigation }) => {
     getAllSpendings();
   };
 
+  const openAddSpendingForm = () => {
+    // console.log("open");
+    setModalVisible(true);
+  };
+
   return (
     <>
       <StatusBar style="auto" />
@@ -86,6 +96,36 @@ const WeekScreen = ({ navigation }) => {
               />
             }
           />
+          <TouchableOpacity
+            style={styles.openButtonContainer}
+            onPress={openAddSpendingForm}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.openButtonText}>+</Text>
+          </TouchableOpacity>
+          <Modal
+            visible={modalVisible}
+            animationType="slide"
+            transparent="true"
+          >
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                setModalVisible(false);
+              }}
+              style={{ width: "100%", height: "100%" }}
+            >
+              <TouchableWithoutFeedback>
+                <View style={styles.modalContainer}>
+                  <SpendingItemForm />
+                  <Button
+                    onPress={() => setModalVisible(false)}
+                    title="Close"
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+            </TouchableOpacity>
+          </Modal>
         </View>
       </View>
     </>
@@ -129,5 +169,41 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#999",
     marginBottom: 10,
+  },
+
+  openButtonContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "dodgerblue",
+    position: "absolute",
+    bottom: 25,
+    right: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  openButtonText: {
+    color: "#fff",
+    fontSize: 30,
+  },
+  modalContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 30,
+    paddingBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    // position: "absolute",
+    width: "100%",
+    top: 20,
+    // bottom: 25,
   },
 });

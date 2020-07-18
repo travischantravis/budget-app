@@ -7,7 +7,6 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  TextInput,
   Modal,
   Button,
 } from "react-native";
@@ -22,6 +21,8 @@ import generateTotalSpending from "../utilities/generateTotalSpending";
 
 const DayScreen = ({ route }) => {
   const timestamp = route.params.timestamp;
+  const date = new Date(timestamp * 1000);
+
   // console.log(route.params);
   // console.log(timestamp);
   const [modalVisible, setModalVisible] = useState(false);
@@ -29,8 +30,6 @@ const DayScreen = ({ route }) => {
   const dbh = myFirebase.firestore();
 
   const getDaySpendings = async () => {
-    const date = new Date(timestamp * 1000);
-
     dbh
       .collection("spendings")
       .where("date", "==", date)
@@ -55,9 +54,7 @@ const DayScreen = ({ route }) => {
 
   // Form handler
   const addSpendingItem = (spendingItem) => {
-    spendingItem.date = firebase.firestore.Timestamp.fromDate(
-      new Date(timestamp * 1000)
-    );
+    spendingItem.date = firebase.firestore.Timestamp.fromDate(date);
     spendingItem.price = parseFloat(spendingItem.price);
 
     // console.log(spendingItem);
@@ -95,14 +92,13 @@ const DayScreen = ({ route }) => {
             renderItem={renderSpending}
             keyExtractor={(item) => item.itemName.toString()}
           />
-          <TouchableHighlight
+          <TouchableOpacity
             style={styles.openButtonContainer}
             onPress={openAddSpendingForm}
-            underlayColor="dodgerblue"
-            activeOpacity={0.2}
+            activeOpacity={0.8}
           >
             <Text style={styles.openButtonText}>+</Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
           <Modal
             visible={modalVisible}
             animationType="slide"
@@ -186,9 +182,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 30,
   },
-  modalCenterView: {
-    opacity: 0,
-  },
+
   modalContainer: {
     justifyContent: "center",
     alignItems: "center",
