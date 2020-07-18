@@ -18,6 +18,19 @@ const WeekScreen = ({ navigation }) => {
   );
   // console.log(weeklySpendings);
 
+  async function getFromApi() {
+    fetch("http://localhost:5000/spendings-138e4/us-central1/app/test")
+      // .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+        return responseJson;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  getFromApi();
+
   const renderDays = ({ item }) => (
     <TouchableOpacity
       onPress={() => navigation.push("Daily", { date: item.date })}
@@ -44,7 +57,7 @@ const WeekScreen = ({ navigation }) => {
           <FlatList
             data={weeklySpendings}
             renderItem={renderDays}
-            keyExtractor={(item) => item.date}
+            keyExtractor={(item) => item.date.toString()}
           />
         </View>
       </View>

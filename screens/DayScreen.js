@@ -61,7 +61,7 @@ const DayScreen = ({ route }) => {
           <FlatList
             data={spendings}
             renderItem={renderSpending}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
           />
           <TouchableHighlight
             style={styles.openButtonContainer}
