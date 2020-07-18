@@ -19,8 +19,8 @@ const WeekScreen = ({ navigation }) => {
   // console.log(weeklySpendings);
 
   async function getFromApi() {
-    fetch("http://localhost:5000/spendings-138e4/us-central1/app/test")
-      // .then((response) => response.json())
+    fetch("http://localhost:5000/spendings-138e4/us-central1/app/api/test")
+      .then((response) => response.json())
       .then((responseJson) => {
         console.log(responseJson);
         return responseJson;
