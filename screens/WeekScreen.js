@@ -5,7 +5,7 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  ScrollView,
+  RefreshControl,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import DaySummary from "../components/DaySummary";
@@ -15,6 +15,7 @@ import myFirebase from "../configFiles/firebase";
 
 const WeekScreen = ({ navigation }) => {
   const [weeklySpendings, setWeeklySpendings] = useState();
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const dbh = myFirebase.firestore();
 
   const getAllSpendings = () => {
@@ -26,6 +27,7 @@ const WeekScreen = ({ navigation }) => {
           return doc.data();
         });
         setWeeklySpendings(generateWeekData(data));
+        setIsRefreshing(false);
       })
       .catch((err) => console.log(err));
   };
@@ -47,6 +49,12 @@ const WeekScreen = ({ navigation }) => {
         <DaySummary item={item} />
       </TouchableOpacity>
     );
+  };
+
+  const handleRefresh = () => {
+    // console.log(isRefreshing);
+    setIsRefreshing(true);
+    getAllSpendings();
   };
 
   return (
@@ -71,6 +79,12 @@ const WeekScreen = ({ navigation }) => {
             data={weeklySpendings}
             renderItem={renderDays}
             keyExtractor={(item) => item.timestamp.toString()}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={handleRefresh}
+              />
+            }
           />
         </View>
       </View>

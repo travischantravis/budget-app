@@ -22,7 +22,7 @@ const SpendingItemForm = ({ addSpendingItem }) => {
         // validationSchema={spendingItemSchema}
         onSubmit={(values, actions) => {
           actions.resetForm();
-          console.log(values);
+          // console.log(values);
           addSpendingItem(values);
         }}
       >

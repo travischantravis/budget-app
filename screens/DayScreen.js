@@ -60,7 +60,7 @@ const DayScreen = ({ route }) => {
     );
     spendingItem.price = parseFloat(spendingItem.price);
 
-    console.log(spendingItem);
+    // console.log(spendingItem);
 
     dbh
       .collection("spendings")
