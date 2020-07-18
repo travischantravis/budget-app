@@ -5,6 +5,7 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import DaySummary from "../components/DaySummary";
@@ -16,15 +17,21 @@ const WeekScreen = ({ navigation }) => {
   const [weeklySpendings, setWeeklySpendings] = useState();
   const dbh = myFirebase.firestore();
 
-  const getAllSpendings = async () => {
-    const snapshot = await dbh.collection("spendings").get();
-    const data = snapshot.docs.map((doc) => doc.data());
-    setWeeklySpendings(generateWeekData(data));
+  const getAllSpendings = () => {
+    dbh
+      .collection("spendings")
+      .get()
+      .then((querySnapshot) => {
+        const data = querySnapshot.docs.map((doc) => {
+          return doc.data();
+        });
+        setWeeklySpendings(generateWeekData(data));
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
     getAllSpendings();
-    // console.log(weeklySpendings);
   }, []);
 
   const renderDays = ({ item }) => {
@@ -32,7 +39,7 @@ const WeekScreen = ({ navigation }) => {
     return (
       <TouchableOpacity
         onPress={() =>
-          navigation.push("Daily", {
+          navigation.push("Day", {
             timestamp: item.timestamp,
           })
         }

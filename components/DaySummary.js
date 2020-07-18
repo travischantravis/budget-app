@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import moment from "moment";
 
 const DaySummary = ({ item }) => {
-  console.log(item);
+  // console.log(item);
   return (
     <View style={styles.container}>
       <Text style={styles.dayTitle}>

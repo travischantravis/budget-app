@@ -16,10 +16,10 @@ const spendingItemSchema = yup.object({
 
 const SpendingItemForm = ({ addSpendingItem }) => {
   return (
-    <View>
+    <>
       <Formik
-        initialValues={{ name: "", price: "" }}
-        validationSchema={spendingItemSchema}
+        initialValues={{ itemName: "", price: "" }}
+        // validationSchema={spendingItemSchema}
         onSubmit={(values, actions) => {
           actions.resetForm();
           console.log(values);
@@ -31,21 +31,21 @@ const SpendingItemForm = ({ addSpendingItem }) => {
             <TextInput
               style={{ ...styles.textInput, ...styles.nameInput }}
               placeholder="Item"
-              onChangeText={props.handleChange("name")}
-              value={props.values.name}
+              onChangeText={props.handleChange("itemName")}
+              value={props.values.itemName}
             />
             <TextInput
-              style={{ ...styles.textInput, flex: 1 }}
+              style={{ ...styles.textInput, ...styles.priceInput }}
               placeholder="Price"
               onChangeText={props.handleChange("price")}
               value={props.values.price}
               keyboardType="numeric"
             />
-            <Button title="Add" onPress={props.handleSubmit} />
+            <Button title="Add item" onPress={props.handleSubmit} />
           </View>
         )}
       </Formik>
-    </View>
+    </>
   );
 };
 
@@ -53,7 +53,8 @@ export default SpendingItemForm;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
+    flexDirection: "column",
+    alignItems: "flex-start",
     width: "100%",
   },
   textInput: {
@@ -62,10 +63,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 10,
+    marginBottom: 10,
   },
 
   nameInput: {
-    flex: 4,
-    marginRight: 10,
+    width: "100%",
+  },
+  priceInput: {
+    width: 100,
   },
 });

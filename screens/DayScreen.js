@@ -17,6 +17,7 @@ import moment from "moment";
 import SpendingItem from "../components/SpendingItem";
 import SpendingItemForm from "../components/SpendingItemForm";
 import myFirebase from "../configFiles/firebase";
+import * as firebase from "firebase";
 import generateTotalSpending from "../utilities/generateTotalSpending";
 
 const DayScreen = ({ route }) => {
@@ -33,17 +34,14 @@ const DayScreen = ({ route }) => {
     dbh
       .collection("spendings")
       .where("date", "==", date)
-      .get()
-      .then((querySnapshot) => {
+      .onSnapshot((querySnapshot) => {
         const data = querySnapshot.docs.map((doc) => {
           return doc.data();
         });
 
         setDailySpendings(data);
-        console.log(data);
-      })
-      .catch((err) => console.log(err));
-    // console.log(data);
+        // console.log(data);
+      });
   };
 
   useEffect(() => {
@@ -55,11 +53,21 @@ const DayScreen = ({ route }) => {
     setModalVisible(true);
   };
 
+  // Form handler
   const addSpendingItem = (spendingItem) => {
-    spendingItem.id = Math.random().toString();
-    // setSpendings((currentItems) => {
-    //   return [spendingItem, ...currentItems];
-    // });
+    spendingItem.date = firebase.firestore.Timestamp.fromDate(
+      new Date(timestamp * 1000)
+    );
+    spendingItem.price = parseFloat(spendingItem.price);
+
+    console.log(spendingItem);
+
+    dbh
+      .collection("spendings")
+      .add(spendingItem)
+      .then((docRef) => console.log("Item added with id ", docRef.id))
+      .catch((err) => console.log(`Cannot add item: ${err}`));
+
     setModalVisible(false);
   };
 
@@ -109,7 +117,7 @@ const DayScreen = ({ route }) => {
             >
               <TouchableWithoutFeedback>
                 <View style={styles.modalContainer}>
-                  {/* <SpendingItemForm addSpendingItem={addSpendingItem} /> */}
+                  <SpendingItemForm addSpendingItem={addSpendingItem} />
                   <Button
                     onPress={() => setModalVisible(false)}
                     title="Close"

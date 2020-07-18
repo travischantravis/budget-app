@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import moment from "moment";
 
 // Navigation
 import DayScreen from "./screens/DayScreen";
@@ -15,16 +16,18 @@ const Tab = createBottomTabNavigator();
 
 const WeekStackScreen = () => {
   return (
-    <WeekStack.Navigator initialRouteName="Weekly">
+    <WeekStack.Navigator initialRouteName="Week">
       <WeekStack.Screen
-        name="Weekly"
+        name="Week"
         component={WeekScreen}
         options={{ title: "Week" }}
       />
       <WeekStack.Screen
-        name="Daily"
+        name="Day"
         component={DayScreen}
-        options={{ title: "Day" }}
+        options={({ route }) => ({
+          title: moment(route.params.timestamp, "X").format("D MMMM"),
+        })}
       />
     </WeekStack.Navigator>
   );
