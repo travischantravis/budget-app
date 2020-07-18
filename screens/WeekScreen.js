@@ -8,39 +8,39 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import DaySummary from "../components/DaySummary";
-import dummyData from "../utilities/dummyData";
 import generateWeekData from "../utilities/generateWeekData";
-import generateWeekData1 from "../utilities/generateWeekData1";
 import generateTotalSpending from "../utilities/generateTotalSpending";
 import myFirebase from "../configFiles/firebase";
 
 const WeekScreen = ({ navigation }) => {
-  // const [weeklySpendings, setweeklySpendings] = useState(
-  //   generateWeekData(dummyData)
-  // );
-  // console.log(weeklySpendings);
-  const [weeklySpendings, setweeklySpendings] = useState();
-
-  // Firebase
+  const [weeklySpendings, setWeeklySpendings] = useState();
   const dbh = myFirebase.firestore();
 
   const getAllSpendings = async () => {
     const snapshot = await dbh.collection("spendings").get();
     const data = snapshot.docs.map((doc) => doc.data());
-    setweeklySpendings(generateWeekData1(data));
+    setWeeklySpendings(generateWeekData(data));
   };
+
   useEffect(() => {
     getAllSpendings();
-    console.log(weeklySpendings);
+    // console.log(weeklySpendings);
   }, []);
 
-  const renderDays = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => navigation.push("Daily", { date: item.timestamp })}
-    >
-      <DaySummary item={item} />
-    </TouchableOpacity>
-  );
+  const renderDays = ({ item }) => {
+    // console.log(item);
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          navigation.push("Daily", {
+            timestamp: item.timestamp,
+          })
+        }
+      >
+        <DaySummary item={item} />
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <>
@@ -52,7 +52,10 @@ const WeekScreen = ({ navigation }) => {
           </Text>
           <Text style={styles.totalSpending}>
             $
-            {generateTotalSpending(weeklySpendings, "totalSpending").toFixed(2)}
+            {weeklySpendings &&
+              generateTotalSpending(weeklySpendings, "totalSpending").toFixed(
+                2
+              )}
           </Text>
         </View>
         <View style={styles.midContainer}>

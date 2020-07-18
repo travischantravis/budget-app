@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,17 +16,39 @@ import moment from "moment";
 
 import SpendingItem from "../components/SpendingItem";
 import SpendingItemForm from "../components/SpendingItemForm";
-import dummyData from "../utilities/dummyData";
+import myFirebase from "../configFiles/firebase";
 import generateTotalSpending from "../utilities/generateTotalSpending";
-import generateDayData from "../utilities/generateDayData";
 
 const DayScreen = ({ route }) => {
-  const date = new Date(route.params.date);
-  // console.log(date);
+  const timestamp = route.params.timestamp;
+  // console.log(route.params);
+  // console.log(timestamp);
   const [modalVisible, setModalVisible] = useState(false);
-  const [spendings, setSpendings] = useState(generateDayData(dummyData, date));
-  // console.log(generateDayData(dummyData, date));
-  // console.log(spendings);
+  const [dailySpendings, setDailySpendings] = useState();
+  const dbh = myFirebase.firestore();
+
+  const getDaySpendings = async () => {
+    const date = new Date(timestamp * 1000);
+
+    dbh
+      .collection("spendings")
+      .where("date", "==", date)
+      .get()
+      .then((querySnapshot) => {
+        const data = querySnapshot.docs.map((doc) => {
+          return doc.data();
+        });
+
+        setDailySpendings(data);
+        console.log(data);
+      })
+      .catch((err) => console.log(err));
+    // console.log(data);
+  };
+
+  useEffect(() => {
+    getDaySpendings();
+  }, []);
 
   const openAddSpendingForm = () => {
     // console.log("open");
@@ -35,9 +57,9 @@ const DayScreen = ({ route }) => {
 
   const addSpendingItem = (spendingItem) => {
     spendingItem.id = Math.random().toString();
-    setSpendings((currentItems) => {
-      return [spendingItem, ...currentItems];
-    });
+    // setSpendings((currentItems) => {
+    //   return [spendingItem, ...currentItems];
+    // });
     setModalVisible(false);
   };
 
@@ -50,18 +72,20 @@ const DayScreen = ({ route }) => {
       <View style={styles.mainContainer}>
         <View style={styles.topContainer}>
           <Text style={styles.topContainerTitle}>
-            Total spendings on {moment(date).format("ddd, D MMM")}
+            Total spendings on {moment(timestamp, "X").format("ddd, D MMM")}
           </Text>
           <Text style={styles.totalSpending}>
-            ${generateTotalSpending(spendings, "price").toFixed(2)}
+            $
+            {dailySpendings &&
+              generateTotalSpending(dailySpendings, "price").toFixed(2)}
           </Text>
         </View>
         <View style={styles.midContainer}>
           <Text style={styles.midContainerTitle}>Recent spendings</Text>
           <FlatList
-            data={spendings}
+            data={dailySpendings}
             renderItem={renderSpending}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.itemName.toString()}
           />
           <TouchableHighlight
             style={styles.openButtonContainer}
@@ -85,7 +109,7 @@ const DayScreen = ({ route }) => {
             >
               <TouchableWithoutFeedback>
                 <View style={styles.modalContainer}>
-                  <SpendingItemForm addSpendingItem={addSpendingItem} />
+                  {/* <SpendingItemForm addSpendingItem={addSpendingItem} /> */}
                   <Button
                     onPress={() => setModalVisible(false)}
                     title="Close"

@@ -4,17 +4,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-// import firebase from "./configFiles/firebase";
-
-// // Initialize Firebase
-// const dbh = firebase.firestore();
-
-// const getMarker = async () => {
-//   const snapshot = await dbh.collection("spendings").get();
-//   console.log(snapshot.docs.map((doc) => doc.data()));
-// };
-
-// getMarker();
 
 // Navigation
 import DayScreen from "./screens/DayScreen";
