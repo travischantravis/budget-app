@@ -1,7 +1,15 @@
-import React from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Platform,
+} from "react-native";
 import { Formik } from "formik";
 import * as yup from "yup";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const spendingItemSchema = yup.object({
   name: yup.string().required().min(2),
@@ -15,6 +23,18 @@ const spendingItemSchema = yup.object({
 });
 
 const SpendingItemForm = ({ addSpendingItem }) => {
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(true);
+
+  const toggleDatepicker = () => {
+    setShowDatePicker(!showDatePicker);
+  };
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+  };
+
   return (
     <>
       <Formik
@@ -41,6 +61,20 @@ const SpendingItemForm = ({ addSpendingItem }) => {
               value={props.values.price}
               keyboardType="numeric"
             />
+            <Button onPress={toggleDatepicker} title="Select date" />
+
+            {showDatePicker && (
+              <DateTimePicker
+                style={{ width: "100%", backgroundColor: "white" }}
+                // testID="dateTimePicker"
+                value={date}
+                mode="date"
+                is24Hour={true}
+                display="default"
+                onChange={onChange}
+              />
+            )}
+
             <Button title="Add item" onPress={props.handleSubmit} />
           </View>
         )}

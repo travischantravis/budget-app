@@ -15,7 +15,7 @@ import moment from "moment";
 import SpendingItem from "../components/SpendingItem";
 import SpendingItemForm from "../components/SpendingItemForm";
 import myFirebase from "../configFiles/firebase";
-import * as firebase from "firebase";
+// import * as firebase from "firebase";
 import generateTotalSpending from "../utilities/generateTotalSpending";
 
 const DayScreen = ({ route }) => {
@@ -62,7 +62,7 @@ const DayScreen = ({ route }) => {
 
   // Form handler
   const addSpendingItem = (spendingItem) => {
-    spendingItem.date = firebase.firestore.Timestamp.fromDate(date);
+    spendingItem.date = myFirebase.firestore.Timestamp.fromDate(date);
     spendingItem.price = parseFloat(spendingItem.price);
 
     // console.log(spendingItem);
