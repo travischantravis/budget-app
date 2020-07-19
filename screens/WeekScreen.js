@@ -67,6 +67,28 @@ const WeekScreen = ({ navigation }) => {
     setModalVisible(true);
   };
 
+  // Form handler
+  const addSpendingItem = (spendingItem) => {
+    // console.log(spendingItem.date.setHours(0, 0, 0, 0));
+
+    // Remove the time part
+    spendingItem.date.setHours(0, 0, 0, 0);
+    spendingItem.date = myFirebase.firestore.Timestamp.fromDate(
+      spendingItem.date
+    );
+    spendingItem.price = parseFloat(spendingItem.price);
+
+    // console.log(spendingItem);
+
+    dbh
+      .collection("spendings") // spendings or spendingsTest
+      .add(spendingItem)
+      .then((docRef) => console.log("Item added with id ", docRef.id))
+      .catch((err) => console.log(`Cannot add item: ${err}`));
+
+    setModalVisible(false);
+  };
+
   return (
     <>
       <StatusBar style="auto" />
@@ -117,7 +139,10 @@ const WeekScreen = ({ navigation }) => {
             >
               <TouchableWithoutFeedback>
                 <View style={styles.modalContainer}>
-                  <SpendingItemForm />
+                  <SpendingItemForm
+                    addSpendingItem={addSpendingItem}
+                    date={new Date()}
+                  />
                   <Button
                     onPress={() => setModalVisible(false)}
                     title="Close"

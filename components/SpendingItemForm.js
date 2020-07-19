@@ -15,17 +15,12 @@ const spendingItemSchema = yup.object({
     }),
 });
 
-const SpendingItemForm = ({ addSpendingItem }) => {
-  const [date, setDate] = useState(new Date());
+const SpendingItemForm = ({ addSpendingItem, date }) => {
+  // console.log(date);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const toggleDatepicker = () => {
     setShowDatePicker(!showDatePicker);
-  };
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setDate(currentDate);
   };
 
   return (
@@ -34,7 +29,7 @@ const SpendingItemForm = ({ addSpendingItem }) => {
         initialValues={{
           itemName: "",
           price: "",
-          date: new Date(),
+          date: date,
         }}
         // validationSchema={spendingItemSchema}
         onSubmit={(values, actions) => {

@@ -71,7 +71,7 @@ const DayScreen = ({ route }) => {
     );
     spendingItem.price = parseFloat(spendingItem.price);
 
-    console.log(spendingItem);
+    // console.log(spendingItem);
 
     dbh
       .collection("spendings") // spendings or spendingsTest
@@ -127,7 +127,10 @@ const DayScreen = ({ route }) => {
             >
               <TouchableWithoutFeedback>
                 <View style={styles.modalContainer}>
-                  <SpendingItemForm addSpendingItem={addSpendingItem} />
+                  <SpendingItemForm
+                    addSpendingItem={addSpendingItem}
+                    date={date}
+                  />
                   <Button
                     onPress={() => setModalVisible(false)}
                     title="Close"
