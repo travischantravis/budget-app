@@ -62,13 +62,19 @@ const DayScreen = ({ route }) => {
 
   // Form handler
   const addSpendingItem = (spendingItem) => {
-    spendingItem.date = myFirebase.firestore.Timestamp.fromDate(date);
+    // console.log(spendingItem.date.setHours(0, 0, 0, 0));
+
+    // Remove the time part
+    spendingItem.date.setHours(0, 0, 0, 0);
+    spendingItem.date = myFirebase.firestore.Timestamp.fromDate(
+      spendingItem.date
+    );
     spendingItem.price = parseFloat(spendingItem.price);
 
-    // console.log(spendingItem);
+    console.log(spendingItem);
 
     dbh
-      .collection("spendings")
+      .collection("spendings") // spendings or spendingsTest
       .add(spendingItem)
       .then((docRef) => console.log("Item added with id ", docRef.id))
       .catch((err) => console.log(`Cannot add item: ${err}`));
@@ -208,7 +214,7 @@ const styles = StyleSheet.create({
     // position: "absolute",
     width: "100%",
     top: 20,
-    // bottom: 25,
+    // bottom: 0,
   },
 });
 
