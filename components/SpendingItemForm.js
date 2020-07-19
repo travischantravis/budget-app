@@ -5,14 +5,17 @@ import * as yup from "yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 const spendingItemSchema = yup.object({
-  name: yup.string().required().min(2),
+  itemName: yup.string().required().min(2).label("Item name"),
 
   price: yup
     .string()
     .required()
     .test("is-num", "Price must be a number", (val) => {
       return parseFloat(val) > 0;
-    }),
+    })
+    .label("Price"),
+
+  // date: yup.required()
 });
 
 const SpendingItemForm = ({ addSpendingItem, date }) => {
@@ -31,7 +34,7 @@ const SpendingItemForm = ({ addSpendingItem, date }) => {
           price: "",
           date: date,
         }}
-        // validationSchema={spendingItemSchema}
+        validationSchema={spendingItemSchema}
         onSubmit={(values, actions) => {
           actions.resetForm();
           console.log(values);
@@ -46,6 +49,9 @@ const SpendingItemForm = ({ addSpendingItem, date }) => {
               onChangeText={props.handleChange("itemName")}
               value={props.values.itemName}
             />
+            {props.errors.itemName && props.touched.itemName ? (
+              <Text style={styles.errorMsg}>{props.errors.itemName}</Text>
+            ) : null}
             <TextInput
               style={{ ...styles.textInput, ...styles.priceInput }}
               placeholder="Price"
@@ -53,6 +59,9 @@ const SpendingItemForm = ({ addSpendingItem, date }) => {
               value={props.values.price}
               keyboardType="numeric"
             />
+            {props.errors.price && props.touched.price ? (
+              <Text style={styles.errorMsg}>{props.errors.price}</Text>
+            ) : null}
             <Button onPress={toggleDatepicker} title="Select date" />
 
             {showDatePicker && (
@@ -67,7 +76,7 @@ const SpendingItemForm = ({ addSpendingItem, date }) => {
                 }}
               />
             )}
-
+            {/* <Text style={{ color: "red" }}>{props.errors.name}</Text> */}
             <Button title="Add item" onPress={props.handleSubmit} />
           </View>
         )}
@@ -98,5 +107,8 @@ const styles = StyleSheet.create({
   },
   priceInput: {
     width: 100,
+  },
+  errorMsg: {
+    color: "red",
   },
 });
