@@ -20,16 +20,16 @@ const WeekScreen = ({ navigation }) => {
 
   async function getFromApi() {
     fetch("http://localhost:5000/spendings-138e4/us-central1/app/test")
-      // .then((response) => response.json())
+      .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
+        console.log(JSON.stringify(responseJson));
         return responseJson;
       })
       .catch((error) => {
         console.error(error);
       });
   }
-  getFromApi();
+  // getFromApi();
 
   const renderDays = ({ item }) => (
     <TouchableOpacity
