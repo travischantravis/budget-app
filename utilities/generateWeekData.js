@@ -2,7 +2,7 @@
 // Return the total spending of each day of the week
 
 export default generateWeekData = (data) => {
-  console.log(data);
+  // console.log(data);
 
   // 1. Group data according to date, and return only the price
   const result = data.reduce(function (r, a) {

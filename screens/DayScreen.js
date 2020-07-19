@@ -26,6 +26,8 @@ const DayScreen = ({ route }) => {
   // console.log(timestamp);
   const [modalVisible, setModalVisible] = useState(false);
   const [dailySpendings, setDailySpendings] = useState();
+  const [isMounted, setIsMounted] = useState(true); // Mount status
+
   const dbh = myFirebase.firestore();
 
   const getDaySpendings = async () => {
@@ -36,14 +38,21 @@ const DayScreen = ({ route }) => {
         const data = querySnapshot.docs.map((doc) => {
           return doc.data();
         });
-
-        setDailySpendings(data);
+        if (isMounted) {
+          setDailySpendings(data);
+        }
         // console.log(data);
       });
   };
 
   useEffect(() => {
+    setIsMounted(true);
     getDaySpendings();
+
+    // Clean up function
+    return () => {
+      setIsMounted(false);
+    };
   }, []);
 
   const openAddSpendingForm = () => {
