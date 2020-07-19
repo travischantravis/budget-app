@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  TouchableHighlight,
   TouchableWithoutFeedback,
   TouchableOpacity,
   Modal,
