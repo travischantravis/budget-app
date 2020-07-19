@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  TextInput,
   Modal,
   Button,
 } from "react-native";
@@ -16,28 +15,56 @@ import moment from "moment";
 
 import SpendingItem from "../components/SpendingItem";
 import SpendingItemForm from "../components/SpendingItemForm";
-import dummyData from "../utilities/dummyData";
+import myFirebase from "../configFiles/firebase";
+import * as firebase from "firebase";
 import generateTotalSpending from "../utilities/generateTotalSpending";
-import generateDayData from "../utilities/generateDayData";
 
 const DayScreen = ({ route }) => {
-  const date = new Date(route.params.date);
-  // console.log(date);
+  const timestamp = route.params.timestamp;
+  const date = new Date(timestamp * 1000);
+
+  // console.log(route.params);
+  // console.log(timestamp);
   const [modalVisible, setModalVisible] = useState(false);
-  const [spendings, setSpendings] = useState(generateDayData(dummyData, date));
-  // console.log(generateDayData(dummyData, date));
-  // console.log(spendings);
+  const [dailySpendings, setDailySpendings] = useState();
+  const dbh = myFirebase.firestore();
+
+  const getDaySpendings = async () => {
+    dbh
+      .collection("spendings")
+      .where("date", "==", date)
+      .onSnapshot((querySnapshot) => {
+        const data = querySnapshot.docs.map((doc) => {
+          return doc.data();
+        });
+
+        setDailySpendings(data);
+        // console.log(data);
+      });
+  };
+
+  useEffect(() => {
+    getDaySpendings();
+  }, []);
 
   const openAddSpendingForm = () => {
     // console.log("open");
     setModalVisible(true);
   };
 
+  // Form handler
   const addSpendingItem = (spendingItem) => {
-    spendingItem.id = Math.random().toString();
-    setSpendings((currentItems) => {
-      return [spendingItem, ...currentItems];
-    });
+    spendingItem.date = firebase.firestore.Timestamp.fromDate(date);
+    spendingItem.price = parseFloat(spendingItem.price);
+
+    // console.log(spendingItem);
+
+    dbh
+      .collection("spendings")
+      .add(spendingItem)
+      .then((docRef) => console.log("Item added with id ", docRef.id))
+      .catch((err) => console.log(`Cannot add item: ${err}`));
+
     setModalVisible(false);
   };
 
@@ -50,27 +77,28 @@ const DayScreen = ({ route }) => {
       <View style={styles.mainContainer}>
         <View style={styles.topContainer}>
           <Text style={styles.topContainerTitle}>
-            Total spendings on {moment(date).format("ddd, D MMM")}
+            Total spendings on {moment(timestamp, "X").format("ddd, D MMM")}
           </Text>
           <Text style={styles.totalSpending}>
-            ${generateTotalSpending(spendings, "price").toFixed(2)}
+            $
+            {dailySpendings &&
+              generateTotalSpending(dailySpendings, "price").toFixed(2)}
           </Text>
         </View>
         <View style={styles.midContainer}>
           <Text style={styles.midContainerTitle}>Recent spendings</Text>
           <FlatList
-            data={spendings}
+            data={dailySpendings}
             renderItem={renderSpending}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.itemName.toString()}
           />
-          <TouchableHighlight
+          <TouchableOpacity
             style={styles.openButtonContainer}
             onPress={openAddSpendingForm}
-            underlayColor="dodgerblue"
-            activeOpacity={0.2}
+            activeOpacity={0.8}
           >
             <Text style={styles.openButtonText}>+</Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
           <Modal
             visible={modalVisible}
             animationType="slide"
@@ -154,9 +182,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 30,
   },
-  modalCenterView: {
-    opacity: 0,
-  },
+
   modalContainer: {
     justifyContent: "center",
     alignItems: "center",

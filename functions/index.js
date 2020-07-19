@@ -1,6 +1,10 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const admin = require("firebase-admin");
+<<<<<<< HEAD
+=======
+const async = require("express-async-await");
+>>>>>>> 2e155b86a06ffcf9dfa6ae9813c521e18f317645
 
 // Express
 const app = express();
@@ -25,6 +29,14 @@ app.get("/api/test", (req, res) => {
     .catch((err) => {
       console.log("Error getting documents", err);
     });
+<<<<<<< HEAD
+=======
+});
+
+app.get("/api/spendings/all", async (req, res) => {
+  const snapshot = await db.collection("spendings").get();
+  res.send(snapshot.docs.map((doc) => doc.data()));
+>>>>>>> 2e155b86a06ffcf9dfa6ae9813c521e18f317645
 });
 
 exports.app = functions.https.onRequest(app);

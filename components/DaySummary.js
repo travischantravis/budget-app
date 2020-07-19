@@ -7,7 +7,7 @@ const DaySummary = ({ item }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.dayTitle}>
-        {moment(item.date).format("ddd, D MMM")}
+        {moment(item.timestamp, "X").format("ddd, D MMM")}
       </Text>
       <Text style={styles.totalSpending}>
         ${parseFloat(item.totalSpending).toFixed(2)}

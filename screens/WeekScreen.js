@@ -1,43 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
   FlatList,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  RefreshControl,
+  Modal,
+  Button,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import DaySummary from "../components/DaySummary";
-import dummyData from "../utilities/dummyData";
+import SpendingItemForm from "../components/SpendingItemForm";
 import generateWeekData from "../utilities/generateWeekData";
 import generateTotalSpending from "../utilities/generateTotalSpending";
+import myFirebase from "../configFiles/firebase";
 
 const WeekScreen = ({ navigation }) => {
-  const [weeklySpendings, setweeklySpendings] = useState(
-    generateWeekData(dummyData)
-  );
-  // console.log(weeklySpendings);
+  const [weeklySpendings, setWeeklySpendings] = useState();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const dbh = myFirebase.firestore();
 
-  async function getFromApi() {
-    fetch("http://localhost:5000/spendings-138e4/us-central1/app/test")
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log(JSON.stringify(responseJson));
-        return responseJson;
+  const getAllSpendings = () => {
+    dbh
+      .collection("spendings")
+      .get()
+      .then((querySnapshot) => {
+        const data = querySnapshot.docs.map((doc) => {
+          return doc.data();
+        });
+        setWeeklySpendings(generateWeekData(data));
+        setIsRefreshing(false);
       })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-  // getFromApi();
+      .catch((err) => console.log(err));
+  };
 
-  const renderDays = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => navigation.push("Daily", { date: item.date })}
-    >
-      <DaySummary item={item} />
-    </TouchableOpacity>
-  );
+  useEffect(() => {
+    getAllSpendings();
+  }, []);
+
+  const renderDays = ({ item }) => {
+    // console.log(item);
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          navigation.push("Day", {
+            timestamp: item.timestamp,
+          })
+        }
+      >
+        <DaySummary item={item} />
+      </TouchableOpacity>
+    );
+  };
+
+  const handleRefresh = () => {
+    // console.log(isRefreshing);
+    setIsRefreshing(true);
+    getAllSpendings();
+  };
+
+  const openAddSpendingForm = () => {
+    // console.log("open");
+    setModalVisible(true);
+  };
 
   return (
     <>
@@ -49,7 +77,10 @@ const WeekScreen = ({ navigation }) => {
           </Text>
           <Text style={styles.totalSpending}>
             $
-            {generateTotalSpending(weeklySpendings, "totalSpending").toFixed(2)}
+            {weeklySpendings &&
+              generateTotalSpending(weeklySpendings, "totalSpending").toFixed(
+                2
+              )}
           </Text>
         </View>
         <View style={styles.midContainer}>
@@ -57,8 +88,44 @@ const WeekScreen = ({ navigation }) => {
           <FlatList
             data={weeklySpendings}
             renderItem={renderDays}
-            keyExtractor={(item) => item.date.toString()}
+            keyExtractor={(item) => item.timestamp.toString()}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={handleRefresh}
+              />
+            }
           />
+          <TouchableOpacity
+            style={styles.openButtonContainer}
+            onPress={openAddSpendingForm}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.openButtonText}>+</Text>
+          </TouchableOpacity>
+          <Modal
+            visible={modalVisible}
+            animationType="slide"
+            transparent="true"
+          >
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                setModalVisible(false);
+              }}
+              style={{ width: "100%", height: "100%" }}
+            >
+              <TouchableWithoutFeedback>
+                <View style={styles.modalContainer}>
+                  <SpendingItemForm />
+                  <Button
+                    onPress={() => setModalVisible(false)}
+                    title="Close"
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+            </TouchableOpacity>
+          </Modal>
         </View>
       </View>
     </>
@@ -102,5 +169,41 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#999",
     marginBottom: 10,
+  },
+
+  openButtonContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "dodgerblue",
+    position: "absolute",
+    bottom: 25,
+    right: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  openButtonText: {
+    color: "#fff",
+    fontSize: 30,
+  },
+  modalContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 30,
+    paddingBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    // position: "absolute",
+    width: "100%",
+    top: 20,
+    // bottom: 25,
   },
 });

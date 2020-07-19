@@ -5,7 +5,7 @@ const SpendingItem = ({ item }) => {
   // console.log(item);
   return (
     <View style={styles.container}>
-      <Text style={styles.spendingName}>{item.name}</Text>
+      <Text style={styles.spendingName}>{item.itemName}</Text>
       <Text style={styles.price}>${parseFloat(item.price).toFixed(2)}</Text>
     </View>
   );
