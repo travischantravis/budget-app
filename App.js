@@ -6,9 +6,10 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import moment from "moment";
 
-// Navigation
+// Screens
 import DayScreen from "./screens/DayScreen";
 import WeekScreen from "./screens/WeekScreen";
+import ItemScreen from "./screens/ItemScreen";
 
 const WeekStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -29,6 +30,13 @@ const WeekStackScreen = () => {
           title: moment(route.params.timestamp, "X").format("D MMMM"),
         })}
       />
+      <WeekStack.Screen
+        name="Item"
+        component={ItemScreen}
+        options={({ route }) => ({
+          title: route.params.item.itemName,
+        })}
+      />
     </WeekStack.Navigator>
   );
 };
@@ -39,7 +47,7 @@ export default function App() {
       <NavigationContainer>
         <Drawer.Navigator initialRouteName="Week">
           <Drawer.Screen name="Week" component={WeekStackScreen} />
-          {/* <Drawer.Screen name="Today" component={DayScreen} /> */}
+          {/* <Drawer.Screen name="Item" component={ItemScreen} /> */}
         </Drawer.Navigator>
       </NavigationContainer>
     </View>

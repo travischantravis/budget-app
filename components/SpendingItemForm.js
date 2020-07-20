@@ -14,8 +14,6 @@ const spendingItemSchema = yup.object({
       return parseFloat(val) > 0;
     })
     .label("Price"),
-
-  // date: yup.required()
 });
 
 const SpendingItemForm = ({ addSpendingItem, date }) => {
@@ -76,7 +74,6 @@ const SpendingItemForm = ({ addSpendingItem, date }) => {
                 }}
               />
             )}
-            {/* <Text style={{ color: "red" }}>{props.errors.name}</Text> */}
             <Button title="Add item" onPress={props.handleSubmit} />
           </View>
         )}

@@ -18,7 +18,7 @@ import myFirebase from "../configFiles/firebase";
 // import * as firebase from "firebase";
 import generateTotalSpending from "../utilities/generateTotalSpending";
 
-const DayScreen = ({ route }) => {
+const DayScreen = ({ route, navigation }) => {
   const timestamp = route.params.timestamp;
   const date = new Date(timestamp * 1000);
 
@@ -30,13 +30,13 @@ const DayScreen = ({ route }) => {
 
   const dbh = myFirebase.firestore();
 
-  const getDaySpendings = async () => {
+  const getDaySpendings = () => {
     dbh
       .collection("spendings")
       .where("date", "==", date)
       .onSnapshot((querySnapshot) => {
         const data = querySnapshot.docs.map((doc) => {
-          return doc.data();
+          return { ...doc.data(), ...{ id: doc.id.toString() } };
         });
         if (isMounted) {
           setDailySpendings(data);
@@ -82,7 +82,20 @@ const DayScreen = ({ route }) => {
     setModalVisible(false);
   };
 
-  const renderSpending = ({ item }) => <SpendingItem item={item} />;
+  const renderSpending = ({ item }) => {
+    // console.log(item);
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          navigation.push("Item", {
+            item,
+          })
+        }
+      >
+        <SpendingItem item={item} />
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <>
@@ -104,7 +117,7 @@ const DayScreen = ({ route }) => {
           <FlatList
             data={dailySpendings}
             renderItem={renderSpending}
-            keyExtractor={(item) => item.itemName.toString()}
+            keyExtractor={(item) => item.id}
           />
           <TouchableOpacity
             style={styles.openButtonContainer}
@@ -161,7 +174,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 20,
-
     flex: 1,
   },
 
