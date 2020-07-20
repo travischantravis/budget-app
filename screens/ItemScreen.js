@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, FlatList, Button } from "react-native";
+import { StyleSheet, Text, View, FlatList, Button, Alert } from "react-native";
 import myFirebase from "../configFiles/firebase";
 import moment from "moment";
 
@@ -24,11 +24,34 @@ const ItemScreen = ({ route, navigation }) => {
       });
   };
 
+  const deleteAlert = () => {
+    Alert.alert(
+      "Do you want to delete this item?",
+      "You cannot undo this action",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: () => {
+            deleteItem();
+            navigation.goBack();
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   // Add a button in the header
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button color="red" onPress={() => deleteItem()} title="Delete" />
+        <Button color="red" onPress={() => deleteAlert()} title="Delete" />
       ),
     });
   }, [navigation]);
