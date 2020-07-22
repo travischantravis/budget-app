@@ -10,6 +10,7 @@ import moment from "moment";
 import DayScreen from "./screens/DayScreen";
 import WeekScreen from "./screens/WeekScreen";
 import ItemScreen from "./screens/ItemScreen";
+import YearScreen from "./screens/YearScreen";
 
 const WeekStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -18,6 +19,8 @@ const Tab = createBottomTabNavigator();
 const WeekStackScreen = () => {
   return (
     <WeekStack.Navigator initialRouteName="Week">
+      <WeekStack.Screen name="Year" component={YearScreen} />
+
       <WeekStack.Screen
         name="Week"
         component={WeekScreen}

@@ -15,15 +15,13 @@ import moment from "moment";
 import SpendingItem from "../components/SpendingItem";
 import SpendingItemForm from "../components/SpendingItemForm";
 import myFirebase from "../configFiles/firebase";
-// import * as firebase from "firebase";
 import generateTotalSpending from "../utilities/generateTotalSpending";
+import addSpending from "../utilities/addSpending";
 
 const DayScreen = ({ route, navigation }) => {
   const timestamp = route.params.timestamp;
   const date = new Date(timestamp * 1000);
 
-  // console.log(route.params);
-  // console.log(timestamp);
   const [modalVisible, setModalVisible] = useState(false);
   const [dailySpendings, setDailySpendings] = useState();
   const [isMounted, setIsMounted] = useState(true); // Mount status
@@ -72,23 +70,7 @@ const DayScreen = ({ route, navigation }) => {
 
   // Form handler
   const addSpendingItem = (spendingItem) => {
-    // console.log(spendingItem.date.setHours(0, 0, 0, 0));
-
-    // Remove the time part
-    spendingItem.date.setHours(0, 0, 0, 0);
-    spendingItem.date = myFirebase.firestore.Timestamp.fromDate(
-      spendingItem.date
-    );
-    spendingItem.price = parseFloat(spendingItem.price);
-
-    // console.log(spendingItem);
-
-    dbh
-      .collection("spendings") // spendings or spendingsTest
-      .add(spendingItem)
-      .then((docRef) => console.log("Item added with id ", docRef.id))
-      .catch((err) => console.log(`Cannot add item: ${err}`));
-
+    addSpending(spendingItem);
     setModalVisible(false);
   };
 

@@ -16,6 +16,7 @@ import SpendingItemForm from "../components/SpendingItemForm";
 import generateWeekData from "../utilities/generateWeekData";
 import generateTotalSpending from "../utilities/generateTotalSpending";
 import myFirebase from "../configFiles/firebase";
+import addSpending from "../utilities/addSpending";
 
 const WeekScreen = ({ navigation }) => {
   const [weeklySpendings, setWeeklySpendings] = useState();
@@ -69,23 +70,7 @@ const WeekScreen = ({ navigation }) => {
 
   // Form handler
   const addSpendingItem = (spendingItem) => {
-    // console.log(spendingItem.date.setHours(0, 0, 0, 0));
-
-    // Remove the time part
-    spendingItem.date.setHours(0, 0, 0, 0);
-    spendingItem.date = myFirebase.firestore.Timestamp.fromDate(
-      spendingItem.date
-    );
-    spendingItem.price = parseFloat(spendingItem.price);
-
-    // console.log(spendingItem);
-
-    dbh
-      .collection("spendings") // spendings or spendingsTest
-      .add(spendingItem)
-      .then((docRef) => console.log("Item added with id ", docRef.id))
-      .catch((err) => console.log(`Cannot add item: ${err}`));
-
+    addSpending(spendingItem);
     setModalVisible(false);
   };
 
