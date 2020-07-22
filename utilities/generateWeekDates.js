@@ -7,8 +7,8 @@ function generateWeekDates(year, weekNumber) {
     .week(weekNumber)
     .startOf("week")
     .add(6, "days");
-  const start = beginningOfWeek.format("ddd, D MMM");
-  const end = endOfWeek.format("ddd, D MMM");
+  const start = beginningOfWeek.format("D MMM");
+  const end = endOfWeek.format("D MMM");
   return { start, end };
 }
 

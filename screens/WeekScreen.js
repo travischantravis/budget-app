@@ -87,6 +87,13 @@ const WeekScreen = ({ navigation }) => {
     setModalVisible(false);
   };
 
+  // Set title of top bar
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: weekDates.start + " - " + weekDates.end,
+    });
+  }, [navigation]);
+
   return (
     <>
       <StatusBar style="auto" />
