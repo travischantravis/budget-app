@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList, Button } from "react-native";
 import myFirebase from "../configFiles/firebase";
 import moment from "moment";
 
@@ -24,13 +24,30 @@ const YearScreen = ({ navigation }) => {
       .catch((err) => console.log(err));
   };
 
+  const foo = () => {
+    fetch(
+      "http://localhost:5000/spendings-138e4/us-central1/app/api/day/total/listen"
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        return json;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   useEffect(() => {
-    getAllSpendings();
+    // getAllSpendings();
+    foo();
   }, []);
 
   return (
     <View style={styles.mainContainer}>
       <Text>Summary</Text>
+      <Button title="week" onPress={() => navigation.push("Week")} />
+      <Text>{moment("1595314800", "X").week()}</Text>
     </View>
   );
 };
