@@ -17,7 +17,7 @@ const ItemScreen = ({ route, navigation }) => {
       .doc(item.id)
       .delete()
       .then(() => {
-        console.log("Document successfully deleted!");
+        console.log("Item deleted with id ", item.id);
       })
       .catch((error) => {
         console.error("Error removing document: ", error);
@@ -31,7 +31,9 @@ const ItemScreen = ({ route, navigation }) => {
       [
         {
           text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
+          onPress: () => {
+            console.log("");
+          },
           style: "cancel",
         },
         {
