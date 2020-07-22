@@ -19,27 +19,33 @@ import myFirebase from "../configFiles/firebase";
 import addSpending from "../utilities/addSpending";
 
 const WeekScreen = ({ navigation }) => {
-  const [weeklySpendings, setWeeklySpendings] = useState();
+  const [weekSpending, setWeekSpending] = useState();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const dbh = myFirebase.firestore();
 
-  const getAllSpendings = () => {
+  const yearweek = "202029";
+
+  const getWeekSpending = () => {
     dbh
-      .collection("spendings")
+      .collection("dayTotal")
+      .where("yearweek", "==", yearweek)
+      .orderBy("timestamp", "asc")
       .get()
       .then((querySnapshot) => {
+        console.log(querySnapshot.docs.length);
         const data = querySnapshot.docs.map((doc) => {
           return doc.data();
         });
-        setWeeklySpendings(generateWeekData(data));
+        console.log(data);
+        setWeekSpending(data);
         setIsRefreshing(false);
       })
       .catch((err) => console.log(err));
   };
 
   useEffect(() => {
-    getAllSpendings();
+    getWeekSpending();
   }, []);
 
   const renderDays = ({ item }) => {
@@ -60,7 +66,8 @@ const WeekScreen = ({ navigation }) => {
   const handleRefresh = () => {
     // console.log(isRefreshing);
     setIsRefreshing(true);
-    getAllSpendings();
+    // getAllSpendings();
+    getWeekSpending();
   };
 
   const openAddSpendingForm = () => {
@@ -84,16 +91,14 @@ const WeekScreen = ({ navigation }) => {
           </Text>
           <Text style={styles.totalSpending}>
             $
-            {weeklySpendings &&
-              generateTotalSpending(weeklySpendings, "totalSpending").toFixed(
-                2
-              )}
+            {weekSpending &&
+              generateTotalSpending(weekSpending, "totalSpending").toFixed(2)}
           </Text>
         </View>
         <View style={styles.midContainer}>
           <Text style={styles.midContainerTitle}>This week's activity</Text>
           <FlatList
-            data={weeklySpendings}
+            data={weekSpending}
             renderItem={renderDays}
             keyExtractor={(item) => item.timestamp.toString()}
             refreshControl={

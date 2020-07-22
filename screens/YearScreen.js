@@ -40,7 +40,7 @@ const YearScreen = ({ navigation }) => {
 
   useEffect(() => {
     // getAllSpendings();
-    foo();
+    // foo();
   }, []);
 
   return (

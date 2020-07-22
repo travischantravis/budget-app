@@ -62,8 +62,13 @@ const generateDayTotal = (data) => {
 
 // Listen for changes in spendings and update dayTotal
 app.get("/api/day/total/listen", async (req, res) => {
-  const snapshot = await db.collection("spendings").get();
-  //res.send(snapshot.docs.map((doc) => doc.data()));
+  db.collection("spendings").onSnapshot((querySnapshot) => {
+    const data = querySnapshot.docs.map((doc) => {
+      let tempData = doc.data();
+      console.log("Changes listened");
+      return tempData;
+    });
+  });
   res.send({ msg: "success" });
 });
 

@@ -18,7 +18,7 @@ const Tab = createBottomTabNavigator();
 
 const WeekStackScreen = () => {
   return (
-    <WeekStack.Navigator initialRouteName="Year">
+    <WeekStack.Navigator initialRouteName="Week">
       <WeekStack.Screen name="Year" component={YearScreen} />
 
       <WeekStack.Screen
