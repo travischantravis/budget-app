@@ -24,13 +24,7 @@ const WeekStackScreen = () => {
         options={{ title: "Week" }}
       />
       <WeekStack.Screen name="Day" component={DayScreen} />
-      <WeekStack.Screen
-        name="Item"
-        component={ItemScreen}
-        // options={({ route }) => ({
-        //   title: route.params.item.itemName,
-        // })}
-      />
+      <WeekStack.Screen name="Item" component={ItemScreen} />
     </WeekStack.Navigator>
   );
 };

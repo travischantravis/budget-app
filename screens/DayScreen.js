@@ -36,12 +36,15 @@ const DayScreen = ({ route, navigation }) => {
       .where("date", "==", date)
       .onSnapshot((querySnapshot) => {
         const data = querySnapshot.docs.map((doc) => {
-          return { ...doc.data(), ...{ id: doc.id.toString() } };
+          // Flatten the object
+          let tempData = doc.data();
+          tempData.date = tempData.date.seconds;
+          tempData.id = doc.id.toString();
+          return tempData;
         });
         if (isMounted) {
           setDailySpendings(data);
         }
-        // console.log(data);
       });
   };
 
@@ -90,10 +93,6 @@ const DayScreen = ({ route, navigation }) => {
   };
 
   const renderSpending = ({ item }) => {
-    // Flatten the object
-    // console.log(item);
-    item.date = item.date.seconds;
-
     return (
       <TouchableOpacity
         onPress={() =>

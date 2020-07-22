@@ -69,7 +69,7 @@ const SpendingItemForm = ({ addSpendingItem, date }) => {
                 mode="date"
                 display="default"
                 onChange={(e, dateString) => {
-                  console.log(dateString);
+                  // console.log(dateString);
                   props.setFieldValue("date", new Date(dateString));
                 }}
               />
