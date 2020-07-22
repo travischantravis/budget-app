@@ -17,6 +17,7 @@ import generateWeekData from "../utilities/generateWeekData";
 import generateTotalSpending from "../utilities/generateTotalSpending";
 import myFirebase from "../configFiles/firebase";
 import addSpending from "../utilities/addSpending";
+import generateWeekDates from "../utilities/generateWeekDates";
 
 const WeekScreen = ({ navigation }) => {
   const [weekSpending, setWeekSpending] = useState();
@@ -24,7 +25,12 @@ const WeekScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const dbh = myFirebase.firestore();
 
-  const yearweek = "202029";
+  const year = 2020;
+  const week = 30;
+  const yearweek = year.toString() + week.toString();
+  const weekDates = generateWeekDates(year, week);
+  console.log(weekDates);
+  console.log(yearweek);
 
   const getWeekSpending = () => {
     dbh
@@ -37,7 +43,7 @@ const WeekScreen = ({ navigation }) => {
         const data = querySnapshot.docs.map((doc) => {
           return doc.data();
         });
-        console.log(data);
+        // console.log(data);
         setWeekSpending(data);
         setIsRefreshing(false);
       })
