@@ -13,29 +13,28 @@ import {
 import { StatusBar } from "expo-status-bar";
 import DaySummary from "../components/DaySummary";
 import SpendingItemForm from "../components/SpendingItemForm";
-import generateWeekData from "../utilities/generateWeekData";
 import generateTotalSpending from "../utilities/generateTotalSpending";
 import myFirebase from "../configFiles/firebase";
 import addSpending from "../utilities/addSpending";
 import generateWeekDates from "../utilities/generateWeekDates";
 
-const WeekScreen = ({ navigation }) => {
+const WeekScreen = ({ navigation, route }) => {
   const [weekSpending, setWeekSpending] = useState();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const dbh = myFirebase.firestore();
 
-  const year = 2020;
-  const week = 30;
-  const yearweek = year.toString() + week.toString();
+  // Date variables
+  const { yearWeek } = route.params;
+  const year = yearWeek.substring(0, 4);
+  const week = yearWeek.substring(4);
   const weekDates = generateWeekDates(year, week);
-  console.log(weekDates);
-  console.log(yearweek);
+  // console.log(yearWeek, year, week);
 
   const getWeekSpending = () => {
     dbh
       .collection("dayTotal")
-      .where("yearweek", "==", yearweek)
+      .where("yearweek", "==", yearWeek)
       .orderBy("timestamp", "asc")
       .get()
       .then((querySnapshot) => {
@@ -51,7 +50,7 @@ const WeekScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getWeekSpending();
+    if (yearWeek) getWeekSpending();
   }, []);
 
   const renderDays = ({ item }) => {

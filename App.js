@@ -18,14 +18,13 @@ const Tab = createBottomTabNavigator();
 
 const WeekStackScreen = () => {
   return (
-    <WeekStack.Navigator initialRouteName="Week">
-      <WeekStack.Screen name="Year" component={YearScreen} />
-
+    <WeekStack.Navigator initialRouteName="Year">
       <WeekStack.Screen
-        name="Week"
-        component={WeekScreen}
-        options={{ title: "Week" }}
+        name="Year"
+        component={YearScreen}
+        options={{ title: "Home" }}
       />
+      <WeekStack.Screen name="Week" component={WeekScreen} />
       <WeekStack.Screen name="Day" component={DayScreen} />
       <WeekStack.Screen name="Item" component={ItemScreen} />
     </WeekStack.Navigator>
