@@ -55,6 +55,13 @@ const DayScreen = ({ route, navigation }) => {
     };
   }, []);
 
+  // Set title of top bar
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: moment(timestamp, "X").format("D MMMM"),
+    });
+  }, [navigation, timestamp]);
+
   const openAddSpendingForm = () => {
     // console.log("open");
     setModalVisible(true);
@@ -83,7 +90,10 @@ const DayScreen = ({ route, navigation }) => {
   };
 
   const renderSpending = ({ item }) => {
+    // Flatten the object
     // console.log(item);
+    item.date = item.date.seconds;
+
     return (
       <TouchableOpacity
         onPress={() =>

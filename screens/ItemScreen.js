@@ -55,6 +55,7 @@ const ItemScreen = ({ route, navigation }) => {
       headerRight: () => (
         <Button color="red" onPress={() => deleteAlert()} title="Delete" />
       ),
+      title: item.itemName,
     });
   }, [navigation]);
 
@@ -88,7 +89,7 @@ const ItemScreen = ({ route, navigation }) => {
         <View style={styles.topContainer}>
           <Text style={styles.title}>{item.itemName}</Text>
           <Text style={styles.itemDescription}>
-            Date: {moment(item.date.seconds, "X").format("ddd, D MMM")}
+            Date: {moment(item.date, "X").format("ddd, D MMM")}
           </Text>
           <Text style={styles.itemDescription}>Price: ${item.price}</Text>
         </View>
