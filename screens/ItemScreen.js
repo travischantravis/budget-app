@@ -4,24 +4,12 @@ import myFirebase from "../configFiles/firebase";
 import moment from "moment";
 
 import ItemTransaction from "../components/ItemTransaction";
+import deleteSpending from "../utilities/deleteSpending";
 
 const ItemScreen = ({ route, navigation }) => {
   const { item } = route.params;
   const [items, setItems] = useState();
   const dbh = myFirebase.firestore();
-
-  const deleteItem = () => {
-    dbh
-      .collection("spendings")
-      .doc(item.id)
-      .delete()
-      .then(() => {
-        console.log("Item deleted with id ", item.id);
-      })
-      .catch((error) => {
-        console.error("Error removing document: ", error);
-      });
-  };
 
   const deleteAlert = () => {
     Alert.alert(
@@ -38,7 +26,7 @@ const ItemScreen = ({ route, navigation }) => {
         {
           text: "Delete",
           onPress: () => {
-            deleteItem();
+            deleteSpending(item);
             navigation.goBack();
           },
           style: "destructive",
@@ -93,9 +81,12 @@ const ItemScreen = ({ route, navigation }) => {
           <Text style={styles.itemDescription}>Price: ${item.price}</Text>
         </View>
         <View style={styles.midContainer}>
-          <Text style={styles.smallTitle}>
-            Recent transactions of {item.itemName}
-          </Text>
+          <View style={styles.titleContainer}>
+            <Text style={styles.smallTitle}>
+              Recent transactions of {item.itemName}{" "}
+            </Text>
+            <Text style={styles.itemCount}>{items && items.length}</Text>
+          </View>
 
           <FlatList
             data={items}
@@ -138,10 +129,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#555",
   },
+  titleContainer: {
+    flexDirection: "row",
+    marginBottom: 10,
+  },
   smallTitle: {
     fontWeight: "bold",
     fontSize: 20,
     color: "#999",
-    marginBottom: 10,
+  },
+  itemCount: {
+    backgroundColor: "#999",
+    color: "#fff",
+    marginLeft: 3,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+    fontSize: 20,
+    borderRadius: 8,
+    overflow: "hidden", // Make border radius work in <Text>
   },
 });

@@ -3,7 +3,10 @@
     "name": "first",
     "slug": "first",
     "version": "1.0.0",
+    "description": "A mobile app that keeps track of my spending, and provides insights about my consumption pattern, such as how frequent I buy the same item.",
+    "privacy": "public",
     "orientation": "portrait",
+    "githubUrl": "https://github.com/travischantravis/budget-app",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -13,9 +16,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },

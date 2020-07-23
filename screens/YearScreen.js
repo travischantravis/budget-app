@@ -30,6 +30,7 @@ const YearScreen = ({ navigation }) => {
         }
       >
         <Text>{weekDates.start + " - " + weekDates.end}</Text>
+        <Text>Total: ${item.totalSpending}</Text>
       </TouchableOpacity>
     );
   };
@@ -43,14 +44,25 @@ const YearScreen = ({ navigation }) => {
           return doc.data();
         });
         setdayTotals(data);
-        const uniqueYearWeek = [...new Set(data.map((item) => item.yearWeek))];
 
-        const formattedYearWeek = uniqueYearWeek.map((d, i) => {
-          return { yearWeek: d, id: i.toString() };
+        // Group data by week
+        const uniqueYearWeek = [...new Set(data.map((item) => item.yearWeek))];
+        let formattedYearWeek = uniqueYearWeek.map((d, i) => {
+          return { yearWeek: d, id: i.toString(), totalSpending: 0 };
         });
 
-        setYearWeeks(formattedYearWeek);
+        // Compute each week's spending
+        data.forEach((dayTotal) => {
+          let index = formattedYearWeek.findIndex(
+            (d) => d.yearWeek === dayTotal.yearWeek
+          );
+          formattedYearWeek[index].totalSpending += dayTotal.totalSpending;
+          formattedYearWeek[index].totalSpending = parseFloat(
+            formattedYearWeek[index].totalSpending.toFixed(2)
+          );
+        });
         console.log(formattedYearWeek);
+        setYearWeeks(formattedYearWeek);
       })
       .catch((err) => console.log(err));
   };

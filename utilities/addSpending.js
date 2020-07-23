@@ -29,14 +29,11 @@ const addSpending = (spendingItem) => {
   spendingItem.week = moment(date).week();
   spendingItem.year = moment(date).year();
 
-  console.log(spendingItem);
-
   // 1. Add the spending item to spendings
   dbh
-    .collection("test") // spendings or test
+    .collection("spendings") // TODO: spendings or test
     .add(spendingItem)
     .then((docRef) => {
-      console.log(spendingItem.date.seconds);
       console.log("Item added: ", docRef.id);
 
       // 2. Update the totalSpending in dayTotal
@@ -49,7 +46,8 @@ const addSpending = (spendingItem) => {
             // Case 1: If day exists in dayTotal, update the totalSpending
 
             console.log("Case 1: Exists in dayTotal");
-            // let dayObj = createDayTotalObj(spendingItem);
+
+            // Get the id of dayObj in dayTotal
             let docId = 1;
             const oldDayObj = snapshot.docs.map((doc) => {
               const dayData = doc.data();
@@ -57,11 +55,11 @@ const addSpending = (spendingItem) => {
               return dayData;
             });
 
+            // Calculate the new total spending of the day
             const oldTotalSpending = oldDayObj[0].totalSpending;
             const newTotalSpending = oldTotalSpending + spendingItem.price;
-            console.log(oldTotalSpending, newTotalSpending);
-            console.log(docId);
 
+            // Update the db
             dbh
               .collection("dayTotal")
               .doc(docId)
@@ -71,7 +69,6 @@ const addSpending = (spendingItem) => {
 
             console.log("Case 2: Does not exist in dayTotal");
             const newObj = createDayTotalObj(spendingItem);
-            console.log(newObj);
             dbh
               .collection("dayTotal")
               .add(newObj)

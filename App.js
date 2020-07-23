@@ -3,8 +3,6 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import moment from "moment";
 
 // Screens
 import DayScreen from "./screens/DayScreen";
@@ -12,22 +10,21 @@ import WeekScreen from "./screens/WeekScreen";
 import ItemScreen from "./screens/ItemScreen";
 import YearScreen from "./screens/YearScreen";
 
-const WeekStack = createStackNavigator();
+const HomeStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
-const Tab = createBottomTabNavigator();
 
-const WeekStackScreen = () => {
+const HomeStackScreen = () => {
   return (
-    <WeekStack.Navigator initialRouteName="Year">
-      <WeekStack.Screen
+    <HomeStack.Navigator initialRouteName="Year">
+      <HomeStack.Screen
         name="Year"
         component={YearScreen}
         options={{ title: "Home" }}
       />
-      <WeekStack.Screen name="Week" component={WeekScreen} />
-      <WeekStack.Screen name="Day" component={DayScreen} />
-      <WeekStack.Screen name="Item" component={ItemScreen} />
-    </WeekStack.Navigator>
+      <HomeStack.Screen name="Week" component={WeekScreen} />
+      <HomeStack.Screen name="Day" component={DayScreen} />
+      <HomeStack.Screen name="Item" component={ItemScreen} />
+    </HomeStack.Navigator>
   );
 };
 
@@ -35,8 +32,8 @@ export default function App() {
   return (
     <View style={styles.container}>
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Week">
-          <Drawer.Screen name="Week" component={WeekStackScreen} />
+        <Drawer.Navigator initialRouteName="Home">
+          <Drawer.Screen name="Home" component={HomeStackScreen} />
           {/* <Drawer.Screen name="Item" component={ItemScreen} /> */}
         </Drawer.Navigator>
       </NavigationContainer>
