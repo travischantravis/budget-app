@@ -64,7 +64,6 @@ const DayScreen = ({ route, navigation }) => {
   }, [navigation, timestamp]);
 
   const openAddSpendingForm = () => {
-    // console.log("open");
     setModalVisible(true);
   };
 

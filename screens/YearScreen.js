@@ -4,7 +4,6 @@ import {
   Text,
   View,
   FlatList,
-  Button,
   TouchableOpacity,
 } from "react-native";
 import myFirebase from "../configFiles/firebase";
@@ -12,13 +11,13 @@ import myFirebase from "../configFiles/firebase";
 import generateWeekDates from "../utilities/generateWeekDates";
 
 const YearScreen = ({ navigation }) => {
-  const dbh = myFirebase.firestore();
   const [dayTotals, setdayTotals] = useState();
-  const [yearWeek, setYearWeek] = useState();
+  const [yearWeeks, setYearWeeks] = useState();
+  const dbh = myFirebase.firestore();
 
-  const renderWeek = ({ item }) => {
-    const year = item.substring(0, 4);
-    const week = item.substring(4);
+  const renderWeeks = ({ item }) => {
+    const year = item.yearWeek.substring(0, 4);
+    const week = item.yearWeek.substring(4);
     const weekDates = generateWeekDates(year, week);
 
     return (
@@ -26,7 +25,7 @@ const YearScreen = ({ navigation }) => {
         style={styles.weekButton}
         onPress={() =>
           navigation.push("Week", {
-            yearWeek: item,
+            yearWeek: item.yearWeek,
           })
         }
       >
@@ -44,8 +43,14 @@ const YearScreen = ({ navigation }) => {
           return doc.data();
         });
         setdayTotals(data);
-        const uniqueYearWeek = [...new Set(data.map((item) => item.yearweek))];
-        setYearWeek(uniqueYearWeek);
+        const uniqueYearWeek = [...new Set(data.map((item) => item.yearWeek))];
+
+        const formattedYearWeek = uniqueYearWeek.map((d, i) => {
+          return { yearWeek: d, id: i.toString() };
+        });
+
+        setYearWeeks(formattedYearWeek);
+        console.log(formattedYearWeek);
       })
       .catch((err) => console.log(err));
   };
@@ -67,17 +72,15 @@ const YearScreen = ({ navigation }) => {
 
   useEffect(() => {
     getAllTotals();
-    // foo();
   }, []);
 
   return (
     <View style={styles.mainContainer}>
       <Text>Select a week</Text>
-      {/* <Button title="week" onPress={() => navigation.push("Week")} /> */}
       <FlatList
-        data={yearWeek}
-        renderItem={renderWeek}
-        keyExtractor={(item) => item}
+        data={yearWeeks}
+        renderItem={renderWeeks}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );

@@ -17,7 +17,6 @@ const spendingItemSchema = yup.object({
 });
 
 const SpendingItemForm = ({ addSpendingItem, date }) => {
-  // console.log(date);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const toggleDatepicker = () => {
@@ -69,7 +68,6 @@ const SpendingItemForm = ({ addSpendingItem, date }) => {
                 mode="date"
                 display="default"
                 onChange={(e, dateString) => {
-                  // console.log(dateString);
                   props.setFieldValue("date", new Date(dateString));
                 }}
               />

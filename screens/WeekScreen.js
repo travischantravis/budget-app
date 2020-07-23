@@ -26,23 +26,21 @@ const WeekScreen = ({ navigation, route }) => {
 
   // Date variables
   const { yearWeek } = route.params;
+  // const yearWeek = "202030";
   const year = yearWeek.substring(0, 4);
   const week = yearWeek.substring(4);
   const weekDates = generateWeekDates(year, week);
-  // console.log(yearWeek, year, week);
 
   const getWeekSpending = () => {
     dbh
       .collection("dayTotal")
-      .where("yearweek", "==", yearWeek)
+      .where("yearWeek", "==", yearWeek)
       .orderBy("timestamp", "asc")
       .get()
       .then((querySnapshot) => {
-        console.log(querySnapshot.docs.length);
         const data = querySnapshot.docs.map((doc) => {
           return doc.data();
         });
-        // console.log(data);
         setWeekSpending(data);
         setIsRefreshing(false);
       })
@@ -50,11 +48,10 @@ const WeekScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    if (yearWeek) getWeekSpending();
+    getWeekSpending();
   }, []);
 
   const renderDays = ({ item }) => {
-    // console.log(item);
     return (
       <TouchableOpacity
         onPress={() =>
@@ -69,14 +66,11 @@ const WeekScreen = ({ navigation, route }) => {
   };
 
   const handleRefresh = () => {
-    // console.log(isRefreshing);
     setIsRefreshing(true);
-    // getAllSpendings();
     getWeekSpending();
   };
 
   const openAddSpendingForm = () => {
-    // console.log("open");
     setModalVisible(true);
   };
 

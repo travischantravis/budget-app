@@ -36,8 +36,6 @@ app.get("/api/spendings/all", async (req, res) => {
 });
 
 const generateDayTotal = (data) => {
-  // console.log(data);
-
   // 1. Group data according to date, and return only the price
   const result = data.reduce(function (r, a) {
     r[a.date.seconds] = r[a.date.seconds] || [];
@@ -56,7 +54,6 @@ const generateDayTotal = (data) => {
     });
   }
 
-  // console.log(result1);
   return result1;
 };
 
@@ -80,7 +77,6 @@ app.get("/api/day/total/new", async (req, res) => {
     data.id = doc.id;
     return data;
   });
-  // console.log(oldData);
   let groupedData = generateDayTotal(oldData);
   groupedData.forEach((d) => {
     d.week = moment(d.timestamp, "X").week();
@@ -115,8 +111,6 @@ app.get("/api/spendings/update", async (req, res) => {
     data.id = doc.id;
     return data;
   });
-
-  // console.log(oldData);
 
   // 2. Add new properties to each document
   const edited = await Promise.all(

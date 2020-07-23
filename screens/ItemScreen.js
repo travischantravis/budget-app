@@ -7,7 +7,6 @@ import ItemTransaction from "../components/ItemTransaction";
 
 const ItemScreen = ({ route, navigation }) => {
   const { item } = route.params;
-  // console.log(item);
   const [items, setItems] = useState();
   const dbh = myFirebase.firestore();
 

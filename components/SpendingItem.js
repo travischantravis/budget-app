@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, View, Text, TextInput } from "react-native";
 
 const SpendingItem = ({ item }) => {
-  // console.log(item);
   return (
     <View style={styles.container}>
       <Text style={styles.spendingName}>{item.itemName}</Text>
