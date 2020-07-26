@@ -5,6 +5,7 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import myFirebase from "../configFiles/firebase";
 
@@ -13,6 +14,8 @@ import generateWeekDates from "../utilities/generateWeekDates";
 const YearScreen = ({ navigation }) => {
   const [dayTotals, setdayTotals] = useState();
   const [yearWeeks, setYearWeeks] = useState();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const dbh = myFirebase.firestore();
 
   const renderWeeks = ({ item }) => {
@@ -33,6 +36,11 @@ const YearScreen = ({ navigation }) => {
         <Text>Total: ${item.totalSpending}</Text>
       </TouchableOpacity>
     );
+  };
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    getAllTotals();
   };
 
   const getAllTotals = () => {
@@ -63,6 +71,7 @@ const YearScreen = ({ navigation }) => {
         });
         console.log(formattedYearWeek);
         setYearWeeks(formattedYearWeek);
+        setIsRefreshing(false);
       })
       .catch((err) => console.log(err));
   };
@@ -93,6 +102,9 @@ const YearScreen = ({ navigation }) => {
         data={yearWeeks}
         renderItem={renderWeeks}
         keyExtractor={(item) => item.id}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }
       />
     </View>
   );
