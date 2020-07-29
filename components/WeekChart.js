@@ -34,7 +34,11 @@ const WeekChart = ({ item }) => {
     <View style={styles.container}>
       <View style={styles.chartContainer}>
         {weekSpending ? (
-          <VictoryChart domainPadding={{ x: 16 }} height={200}>
+          <VictoryChart
+            domainPadding={{ x: 16 }}
+            height={200}
+            padding={{ top: 40, left: 30, right: 40, bottom: 60 }}
+          >
             <VictoryBar
               name="myBarChart2"
               data={weekSpending}

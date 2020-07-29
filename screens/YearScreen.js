@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  RefreshControl,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import myFirebase from "../configFiles/firebase";
 import { VictoryBar, VictoryChart, VictoryAxis } from "victory-native";
 
@@ -26,22 +20,22 @@ const YearScreen = ({ navigation }) => {
     const weekDates = generateWeekDates(year, week);
 
     return (
-      <>
+      <View style={styles.weekSummaryContainer}>
+        <Text style={styles.weekDate}>
+          {weekDates.start + " - " + weekDates.end}
+        </Text>
+        <Text style={styles.weekTotal}>Total: ${item.totalSpending}</Text>
         <TouchableOpacity
-          style={styles.weekSummaryContainer}
           onPress={() =>
             navigation.push("Week", {
               yearWeek: item.yearWeek,
             })
           }
         >
-          <Text style={styles.weekDate}>
-            {weekDates.start + " - " + weekDates.end}
-          </Text>
-          <Text style={styles.weekTotal}>Total: ${item.totalSpending}</Text>
+          <Text style={styles.learnMore}>Learn more</Text>
         </TouchableOpacity>
         <WeekChart item={item} />
-      </>
+      </View>
     );
   };
 
@@ -191,12 +185,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 160,
   },
+  selectedContainer: {
+    // backgroundColor: "#eee",
+  },
   weekSummaryContainer: {
+    backgroundColor: "#eee",
     marginTop: 10,
     fontSize: 16,
-    backgroundColor: "lightblue",
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 20,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
   },
   weekDate: {
     fontWeight: "bold",
@@ -205,5 +204,8 @@ const styles = StyleSheet.create({
   weekTotal: {
     fontSize: 15,
     paddingTop: 5,
+  },
+  learnMore: {
+    color: "lightblue",
   },
 });
