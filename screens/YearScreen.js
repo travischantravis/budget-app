@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
   TouchableOpacity,
   RefreshControl,
 } from "react-native";
@@ -11,37 +10,39 @@ import myFirebase from "../configFiles/firebase";
 import { VictoryBar, VictoryChart, VictoryAxis } from "victory-native";
 
 import generateWeekDates from "../utilities/generateWeekDates";
+import WeekChart from "../components/WeekChart";
 
 const YearScreen = ({ navigation }) => {
   const [dayTotals, setdayTotals] = useState();
   const [yearWeeks, setYearWeeks] = useState();
+  const [selectedYearWeek, setSelectedYearWeek] = useState();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const dbh = myFirebase.firestore();
 
-  const renderWeeks = ({ item }) => {
+  const WeekSummary = ({ item }) => {
     const year = item.yearWeek.substring(0, 4);
     const week = item.yearWeek.substring(4);
     const weekDates = generateWeekDates(year, week);
 
     return (
-      <TouchableOpacity
-        style={styles.weekButton}
-        onPress={() =>
-          navigation.push("Week", {
-            yearWeek: item.yearWeek,
-          })
-        }
-      >
-        <Text>{weekDates.start + " - " + weekDates.end}</Text>
-        <Text>Total: ${item.totalSpending}</Text>
-      </TouchableOpacity>
+      <>
+        <TouchableOpacity
+          style={styles.weekSummaryContainer}
+          onPress={() =>
+            navigation.push("Week", {
+              yearWeek: item.yearWeek,
+            })
+          }
+        >
+          <Text style={styles.weekDate}>
+            {weekDates.start + " - " + weekDates.end}
+          </Text>
+          <Text style={styles.weekTotal}>Total: ${item.totalSpending}</Text>
+        </TouchableOpacity>
+        <WeekChart item={item} />
+      </>
     );
-  };
-
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    getAllTotals();
   };
 
   const getAllTotals = () => {
@@ -75,9 +76,8 @@ const YearScreen = ({ navigation }) => {
         formattedYearWeek.sort(
           (a, b) => parseInt(a.yearWeek) - parseInt(b.yearWeek)
         );
-        console.log(formattedYearWeek);
+        // console.log(formattedYearWeek);
         setYearWeeks(formattedYearWeek);
-
         setIsRefreshing(false);
       })
       .catch((err) => console.log(err));
@@ -104,11 +104,15 @@ const YearScreen = ({ navigation }) => {
 
   return (
     <View style={styles.mainContainer}>
+      <View style={styles.topContainer}>
+        <Text style={styles.topTitle}>My Spendings</Text>
+      </View>
       <View style={styles.chartContainer}>
         {yearWeeks ? (
           <VictoryChart
             domainPadding={{ x: 16 }}
-            height={200}
+            height={220}
+            padding={{ top: 40, left: 40, right: 40, bottom: 60 }}
             events={[
               {
                 childName: "myBarChart",
@@ -127,8 +131,9 @@ const YearScreen = ({ navigation }) => {
                       {
                         childName: "myBarChart",
                         target: "data",
-                        mutation: (props) => {
-                          return { style: { fill: "red" } };
+                        mutation: ({ datum }) => {
+                          setSelectedYearWeek(datum);
+                          return { style: { fill: "#62AEC4" } };
                         },
                       },
                     ];
@@ -140,7 +145,12 @@ const YearScreen = ({ navigation }) => {
             <VictoryBar
               name="myBarChart"
               data={yearWeeks}
-              x={(d) => d.yearWeek.substring(4)}
+              x={(d) => {
+                const year = d.yearWeek.substring(0, 4);
+                const week = d.yearWeek.substring(4);
+                const weekDates = generateWeekDates(year, week);
+                return weekDates.start;
+              }}
               y={(d) => d.totalSpending}
               barWidth={16}
               cornerRadius={5}
@@ -151,18 +161,8 @@ const YearScreen = ({ navigation }) => {
           </VictoryChart>
         ) : null}
       </View>
-      <View style={styles.listContainer}>
-        <FlatList
-          data={yearWeeks}
-          renderItem={renderWeeks}
-          keyExtractor={(item) => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={handleRefresh}
-            />
-          }
-        />
+      <View style={styles.selectedContainer}>
+        {selectedYearWeek ? <WeekSummary item={selectedYearWeek} /> : null}
       </View>
     </View>
   );
@@ -174,19 +174,36 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
   },
-  weekButton: {
-    margin: 10,
-    fontSize: 16,
-    backgroundColor: "lightblue",
-    padding: 10,
-    borderRadius: 5,
+  topContainer: {
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
+    paddingBottom: 30,
+    paddingTop: 10,
+  },
+  topTitle: {
+    color: "#000",
+    fontWeight: "bold",
+    fontSize: 30,
   },
   chartContainer: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "pink",
-    height: 200,
+    height: 160,
+  },
+  weekSummaryContainer: {
+    marginTop: 10,
+    fontSize: 16,
+    backgroundColor: "lightblue",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  weekDate: {
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  weekTotal: {
+    fontSize: 15,
+    paddingTop: 5,
   },
 });
