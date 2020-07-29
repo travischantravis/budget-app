@@ -8,6 +8,7 @@ import {
   RefreshControl,
 } from "react-native";
 import myFirebase from "../configFiles/firebase";
+import { VictoryBar, VictoryChart, VictoryAxis } from "victory-native";
 
 import generateWeekDates from "../utilities/generateWeekDates";
 
@@ -69,8 +70,14 @@ const YearScreen = ({ navigation }) => {
             formattedYearWeek[index].totalSpending.toFixed(2)
           );
         });
+
+        // Sort yearWeek in ascending order
+        formattedYearWeek.sort(
+          (a, b) => parseInt(a.yearWeek) - parseInt(b.yearWeek)
+        );
         console.log(formattedYearWeek);
         setYearWeeks(formattedYearWeek);
+
         setIsRefreshing(false);
       })
       .catch((err) => console.log(err));
@@ -97,15 +104,66 @@ const YearScreen = ({ navigation }) => {
 
   return (
     <View style={styles.mainContainer}>
-      <Text>Select a week</Text>
-      <FlatList
-        data={yearWeeks}
-        renderItem={renderWeeks}
-        keyExtractor={(item) => item.id}
-        refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
-        }
-      />
+      <View style={styles.chartContainer}>
+        {yearWeeks ? (
+          <VictoryChart
+            domainPadding={{ x: 16 }}
+            height={200}
+            events={[
+              {
+                childName: "myBarChart",
+                target: "data",
+                eventHandlers: {
+                  onPress: () => {
+                    return [
+                      {
+                        childName: "myBarChart",
+                        target: "data",
+                        eventKey: "all",
+                        mutation: () => {
+                          return { style: { fill: "lightblue" } };
+                        },
+                      },
+                      {
+                        childName: "myBarChart",
+                        target: "data",
+                        mutation: (props) => {
+                          return { style: { fill: "red" } };
+                        },
+                      },
+                    ];
+                  },
+                },
+              },
+            ]}
+          >
+            <VictoryBar
+              name="myBarChart"
+              data={yearWeeks}
+              x={(d) => d.yearWeek.substring(4)}
+              y={(d) => d.totalSpending}
+              barWidth={16}
+              cornerRadius={5}
+              style={{ data: { fill: "lightblue" } }}
+            />
+            <VictoryAxis />
+            <VictoryAxis dependentAxis />
+          </VictoryChart>
+        ) : null}
+      </View>
+      <View style={styles.listContainer}>
+        <FlatList
+          data={yearWeeks}
+          renderItem={renderWeeks}
+          keyExtractor={(item) => item.id}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+            />
+          }
+        />
+      </View>
     </View>
   );
 };
@@ -124,5 +182,11 @@ const styles = StyleSheet.create({
     backgroundColor: "lightblue",
     padding: 10,
     borderRadius: 5,
+  },
+  chartContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "pink",
+    height: 200,
   },
 });
