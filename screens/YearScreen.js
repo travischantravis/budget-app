@@ -21,19 +21,23 @@ const YearScreen = ({ navigation }) => {
 
     return (
       <View style={styles.weekSummaryContainer}>
-        <Text style={styles.weekDate}>
-          {weekDates.start + " - " + weekDates.end}
-        </Text>
-        <Text style={styles.weekTotal}>Total: ${item.totalSpending}</Text>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.push("Week", {
-              yearWeek: item.yearWeek,
-            })
-          }
-        >
-          <Text style={styles.learnMore}>Learn more</Text>
-        </TouchableOpacity>
+        <View style={styles.weekSummaryDesc}>
+          <View style={styles.weekTitles}>
+            <Text style={styles.weekDate}>
+              {weekDates.start + " - " + weekDates.end}
+            </Text>
+            <Text style={styles.weekTotal}>Total: ${item.totalSpending}</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.push("Week", {
+                yearWeek: item.yearWeek,
+              })
+            }
+          >
+            <Text style={styles.learnMore}>{">"}</Text>
+          </TouchableOpacity>
+        </View>
         <WeekChart item={item} />
       </View>
     );
@@ -155,7 +159,7 @@ const YearScreen = ({ navigation }) => {
           </VictoryChart>
         ) : null}
       </View>
-      <View style={styles.selectedContainer}>
+      <View>
         {selectedYearWeek ? <WeekSummary item={selectedYearWeek} /> : null}
       </View>
     </View>
@@ -185,9 +189,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 160,
   },
-  selectedContainer: {
-    // backgroundColor: "#eee",
-  },
   weekSummaryContainer: {
     backgroundColor: "#eee",
     marginTop: 10,
@@ -196,6 +197,10 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+  },
+  weekSummaryDesc: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   weekDate: {
     fontWeight: "bold",
@@ -206,6 +211,9 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   learnMore: {
-    color: "lightblue",
+    fontSize: 25,
+    color: "#999",
+    fontWeight: "bold",
+    padding: 5,
   },
 });
