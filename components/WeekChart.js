@@ -54,10 +54,10 @@ const WeekChart = ({ item }) => {
               cornerRadius={5}
               style={{ data: { fill: "lightblue" } }}
             />
+            <VictoryAxis />
+            <VictoryAxis dependentAxis />
           </VictoryChart>
         ) : null}
-        <VictoryAxis />
-        <VictoryAxis dependentAxis />
       </View>
     </View>
   );

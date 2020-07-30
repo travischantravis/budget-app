@@ -10,8 +10,8 @@ const spendingItemSchema = yup.object({
   price: yup
     .string()
     .required()
-    .test("is-num", "Price must be a number", (val) => {
-      return parseFloat(val) > 0;
+    .test("is-num", "Price must be a non-negative number", (val) => {
+      return parseFloat(val) >= 0;
     })
     .label("Price"),
 });
