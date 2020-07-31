@@ -75,29 +75,50 @@ app.get("/api/day/total/new", async (req, res) => {
   const oldData = snapshot.docs.map((doc) => {
     let data = doc.data();
     data.id = doc.id;
-    return data;
-  });
-  let groupedData = generateDayTotal(oldData);
-  groupedData.forEach((d) => {
-    d.week = moment(d.timestamp, "X").week();
-    d.year = moment(d.timestamp, "X").year();
-    d.totalSpending = parseFloat(d.totalSpending.toFixed(2));
-    d.date = moment(d.timestamp, "X").format();
+    return { ...data, id: doc.id.toString() };
   });
 
-  const run = await Promise.all(
-    groupedData.map((data) => {
-      console.log(data);
-      db.collection("dayTotal")
-        .add(data)
-        .then(function (docRef) {
-          console.log("Document written with ID: ", docRef.id);
-        })
-        .catch(function (error) {
-          console.error("Error adding document: ", error);
-        });
-    })
-  );
+  oldData.sort((a, b) => a.id < b.id);
+  console.log(oldData.length);
+
+  // const run = await Promise.all(
+  oldData.slice(6, 7).map((data) => {
+    // console.log(data.category, data.price, da);
+    db.collection("dayTotal")
+      .where("timestamp", "==", data.date.seconds.toString())
+      .get()
+      .then(function (snapshot) {
+        const dayData = snapshot.docs[0];
+        const id = dayData.id;
+        const category = data.category.toLowerCase();
+        console.log(data);
+        console.log(dayData.data());
+        console.log("dayTotal", id);
+
+        let categoryTotal = data.price;
+        if (data[category]) {
+          categoryTotal += data[category];
+        }
+        console.log(category, dayData[category], data.price, categoryTotal);
+        db.collection("dayTotal")
+          .doc(id)
+          .update({
+            [category]: parseFloat(categoryTotal.toFixed(2)),
+          });
+      })
+      .catch(function (error) {
+        console.error("Error adding document: ", error);
+      });
+    // db.collection("dayTotal")
+    //   .add(data)
+    //   .then(function (docRef) {
+    //     console.log("Document written with ID: ", docRef.id);
+    //   })
+    //   .catch(function (error) {
+    //     console.error("Error adding document: ", error);
+    //   });
+  });
+  // );
 
   res.send({ msg: "success" });
 });

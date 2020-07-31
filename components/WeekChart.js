@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { VictoryBar, VictoryChart, VictoryAxis } from "victory-native";
+import {
+  VictoryBar,
+  VictoryChart,
+  VictoryAxis,
+  VictoryStack,
+} from "victory-native";
 import moment from "moment";
+import { groupBy } from "lodash";
 
 import myFirebase from "../configFiles/firebase";
 
@@ -20,8 +26,10 @@ const WeekChart = ({ item }) => {
         const data = querySnapshot.docs.map((doc) => {
           return doc.data();
         });
-        // console.log(data);
+        // console.log(data[0]);
         setWeekSpending(data);
+
+        // console.log(_.groupBy());
       })
       .catch((err) => console.log(err));
   };
@@ -53,6 +61,10 @@ const WeekChart = ({ item }) => {
               barWidth={16}
               cornerRadius={5}
               style={{ data: { fill: "lightblue" } }}
+              animate={{
+                duration: 500,
+                onLoad: { duration: 500 },
+              }}
             />
             <VictoryAxis />
             <VictoryAxis dependentAxis />

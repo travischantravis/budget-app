@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import myFirebase from "../configFiles/firebase";
-import { VictoryBar, VictoryChart, VictoryAxis } from "victory-native";
+import {
+  VictoryBar,
+  VictoryChart,
+  VictoryAxis,
+  VictoryStack,
+} from "victory-native";
 
 import generateWeekDates from "../utilities/generateWeekDates";
 import WeekChart from "../components/WeekChart";
@@ -84,7 +89,7 @@ const YearScreen = ({ navigation }) => {
   // [One-time] Run code in firebase functions
   const foo = () => {
     fetch(
-      "http://localhost:5000/spendings-138e4/us-central1/app/api/day/total/listen"
+      "http://localhost:5000/spendings-138e4/us-central1/app/api/day/total/new"
     )
       .then((response) => response.json())
       .then((json) => {
@@ -97,7 +102,8 @@ const YearScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getAllTotals();
+    // getAllTotals();
+    foo();
   }, []);
 
   return (
@@ -150,7 +156,7 @@ const YearScreen = ({ navigation }) => {
                 return weekDates.start;
               }}
               y={(d) => d.totalSpending}
-              barWidth={16}
+              barWidth={25}
               cornerRadius={5}
               style={{ data: { fill: "lightblue" } }}
             />

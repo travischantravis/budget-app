@@ -76,9 +76,9 @@ const ItemScreen = ({ route, navigation }) => {
         <View style={styles.topContainer}>
           <Text style={styles.title}>{item.itemName}</Text>
           <Text style={styles.itemDescription}>
-            Date: {moment(item.date, "X").format("ddd, D MMM")}
+            Date: {moment(item.date, "X").format("ddd, D MMM, YYYY")}
           </Text>
-          <Text style={styles.itemDescription}>Price: ${item.price}</Text>
+          <Text style={styles.itemDescription}>Amount: ${item.price}</Text>
         </View>
         <View style={styles.midContainer}>
           <View style={styles.titleContainer}>
