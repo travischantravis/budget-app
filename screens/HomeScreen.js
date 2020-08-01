@@ -2,46 +2,12 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import myFirebase from "../configFiles/firebase";
 
-import generateWeekDates from "../utilities/generateWeekDates";
-import WeekChart from "../components/WeekChart";
-import categoriesArray from "../utilities/categories";
-
 const HomeScreen = ({ navigation }) => {
   const [dayTotals, setdayTotals] = useState();
   const [yearWeeks, setYearWeeks] = useState();
-  const [selectedYearWeek, setSelectedYearWeek] = useState();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const dbh = myFirebase.firestore();
-
-  const WeekSummary = ({ item }) => {
-    const year = item.yearWeek.substring(0, 4);
-    const week = item.yearWeek.substring(4);
-    const weekDates = generateWeekDates(year, week);
-
-    return (
-      <View style={styles.weekSummaryContainer}>
-        <View style={styles.weekSummaryDesc}>
-          <View style={styles.weekTitles}>
-            <Text style={styles.weekDate}>
-              {weekDates.start + " - " + weekDates.end}
-            </Text>
-            <Text style={styles.weekTotal}>Total: ${item.totalSpending}</Text>
-          </View>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.push("Week", {
-                yearWeek: item.yearWeek,
-              })
-            }
-          >
-            <Text style={styles.learnMore}>{">"}</Text>
-          </TouchableOpacity>
-        </View>
-        <WeekChart item={item} />
-      </View>
-    );
-  };
 
   const getAllTotals = () => {
     dbh
@@ -100,24 +66,8 @@ const HomeScreen = ({ navigation }) => {
       .catch((err) => console.log(err));
   };
 
-  // [One-time] Run code in firebase functions
-  const foo = () => {
-    fetch(
-      "http://localhost:5000/spendings-138e4/us-central1/app/api/day/total/new"
-    )
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-        return json;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
   useEffect(() => {
     getAllTotals();
-    // foo();
   }, []);
 
   return (
