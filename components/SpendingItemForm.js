@@ -7,6 +7,8 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 const spendingItemSchema = yup.object({
   itemName: yup.string().required().min(2).label("Item name"),
 
+  category: yup.string().required().min(2).label("Category"),
+
   price: yup
     .string()
     .required()
@@ -28,6 +30,7 @@ const SpendingItemForm = ({ addSpendingItem, date }) => {
       <Formik
         initialValues={{
           itemName: "",
+          category: "",
           price: "",
           date: date,
         }}
@@ -49,6 +52,17 @@ const SpendingItemForm = ({ addSpendingItem, date }) => {
             {props.errors.itemName && props.touched.itemName ? (
               <Text style={styles.errorMsg}>{props.errors.itemName}</Text>
             ) : null}
+
+            <TextInput
+              style={{ ...styles.textInput, ...styles.nameInput }}
+              placeholder="Category"
+              onChangeText={props.handleChange("category")}
+              value={props.values.category}
+            />
+            {props.errors.category && props.touched.category ? (
+              <Text style={styles.errorMsg}>{props.errors.category}</Text>
+            ) : null}
+
             <TextInput
               style={{ ...styles.textInput, ...styles.priceInput }}
               placeholder="Price"
@@ -59,6 +73,7 @@ const SpendingItemForm = ({ addSpendingItem, date }) => {
             {props.errors.price && props.touched.price ? (
               <Text style={styles.errorMsg}>{props.errors.price}</Text>
             ) : null}
+
             <Button onPress={toggleDatepicker} title="Select date" />
 
             {showDatePicker && (

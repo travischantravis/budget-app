@@ -5,6 +5,7 @@ const createDayTotalObj = (d) => {
   const seconds = d.date.seconds;
   const week = moment(seconds, "X").week();
   const year = moment(seconds, "X").year();
+  const category = d.category.toLowerCase();
 
   let newDayTotalObj = {};
   newDayTotalObj.timestamp = seconds.toString();
@@ -13,6 +14,12 @@ const createDayTotalObj = (d) => {
   newDayTotalObj.yearWeek = year.toString() + week.toString();
   newDayTotalObj.date = moment(seconds, "X").format();
   newDayTotalObj.totalSpending = parseFloat(d.price.toFixed(2));
+
+  // Categories [hard-coded]
+  newDayTotalObj.grocery = 0;
+  newDayTotalObj["dine out"] = 0;
+  newDayTotalObj.others = 0;
+  newDayTotalObj[category] = parseFloat(d.price.toFixed(2));
   return newDayTotalObj;
 };
 
@@ -59,16 +66,19 @@ const addSpending = (spendingItem) => {
             const oldTotalSpending = oldDayObj[0].totalSpending;
             const newTotalSpending = oldTotalSpending + spendingItem.price;
 
+            // Update category total
+
             // Update the db
-            dbh
-              .collection("dayTotal")
-              .doc(docId)
-              .update({ totalSpending: newTotalSpending });
+            // dbh
+            //   .collection("dayTotal")
+            //   .doc(docId)
+            //   .update({ totalSpending: newTotalSpending });
           } else if (snapshot.docs.length === 0) {
             // Case 2: If day does not exist, create a new day in dayTotal
 
             console.log("Case 2: Does not exist in dayTotal");
             const newObj = createDayTotalObj(spendingItem);
+            console.log(newObj);
             dbh
               .collection("dayTotal")
               .add(newObj)
