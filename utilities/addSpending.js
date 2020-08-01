@@ -17,7 +17,7 @@ const createDayTotalObj = (d) => {
 
   // Categories [hard-coded]
   newDayTotalObj.grocery = 0;
-  newDayTotalObj["dine out"] = 0;
+  newDayTotalObj.dining = 0;
   newDayTotalObj.others = 0;
   newDayTotalObj[category] = parseFloat(d.price.toFixed(2));
   return newDayTotalObj;

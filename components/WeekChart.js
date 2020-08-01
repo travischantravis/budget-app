@@ -7,9 +7,9 @@ import {
   VictoryStack,
 } from "victory-native";
 import moment from "moment";
-import { groupBy } from "lodash";
 
 import myFirebase from "../configFiles/firebase";
+import categoriesArray from "../utilities/categories";
 
 const WeekChart = ({ item }) => {
   const dbh = myFirebase.firestore();
@@ -26,10 +26,7 @@ const WeekChart = ({ item }) => {
         const data = querySnapshot.docs.map((doc) => {
           return doc.data();
         });
-        // console.log(data[0]);
         setWeekSpending(data);
-
-        // console.log(_.groupBy());
       })
       .catch((err) => console.log(err));
   };
@@ -47,25 +44,32 @@ const WeekChart = ({ item }) => {
             height={200}
             padding={{ top: 40, left: 30, right: 40, bottom: 60 }}
           >
-            <VictoryBar
-              name="myBarChart2"
-              data={weekSpending}
-              x={(d) => {
+            <VictoryStack colorScale={["#72C7EC", "#1FBBD7", "#117DAC"]}>
+              {categoriesArray.map((category, index) => {
                 return (
-                  moment(d.date).format("ddd") +
-                  "\n" +
-                  moment(d.date).format("DD")
+                  <VictoryBar
+                    key={category}
+                    data={weekSpending}
+                    x={(d) => {
+                      return (
+                        moment(d.date).format("ddd") +
+                        "\n" +
+                        moment(d.date).format("DD")
+                      );
+                    }}
+                    y={(d) => {
+                      return d[category];
+                    }}
+                    barWidth={25}
+                    // cornerRadius={index === 2 ? 5 : 0}
+                    animate={{
+                      duration: 500,
+                      onLoad: { duration: 500 },
+                    }}
+                  />
                 );
-              }}
-              y={(d) => d.totalSpending}
-              barWidth={16}
-              cornerRadius={5}
-              style={{ data: { fill: "lightblue" } }}
-              animate={{
-                duration: 500,
-                onLoad: { duration: 500 },
-              }}
-            />
+              })}
+            </VictoryStack>
             <VictoryAxis />
             <VictoryAxis dependentAxis />
           </VictoryChart>

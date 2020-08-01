@@ -9,24 +9,37 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import DayScreen from "./screens/DayScreen";
 import WeekScreen from "./screens/WeekScreen";
 import ItemScreen from "./screens/ItemScreen";
-import YearScreen from "./screens/YearScreen";
+import HomeScreen from "./screens/HomeScreen";
 import AnalyticsScreen from "./screens/AnalyticsScreen";
 
 const HomeStack = createStackNavigator();
+const AnalyticsStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const HomeStackScreen = () => {
   return (
-    <HomeStack.Navigator initialRouteName="Year">
+    <HomeStack.Navigator initialRouteName="Home">
       <HomeStack.Screen
-        name="Year"
-        component={YearScreen}
+        name="Home"
+        component={HomeScreen}
         options={{ title: "Home" }}
       />
       <HomeStack.Screen name="Week" component={WeekScreen} />
       <HomeStack.Screen name="Day" component={DayScreen} />
       <HomeStack.Screen name="Item" component={ItemScreen} />
     </HomeStack.Navigator>
+  );
+};
+
+const AnalyticsStackScreen = () => {
+  return (
+    <AnalyticsStack.Navigator initialRouteName="Home">
+      <AnalyticsStack.Screen
+        name="Analytics"
+        component={AnalyticsScreen}
+        options={{ title: "Analytics" }}
+      />
+    </AnalyticsStack.Navigator>
   );
 };
 
@@ -55,7 +68,7 @@ export default function App() {
           }}
         >
           <Tab.Screen name="Home" component={HomeStackScreen} />
-          <Tab.Screen name="Analytics" component={AnalyticsScreen} />
+          <Tab.Screen name="Analytics" component={AnalyticsStackScreen} />
         </Tab.Navigator>
       </NavigationContainer>
     </View>
