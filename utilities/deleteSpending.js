@@ -3,7 +3,6 @@ import myFirebase from "../configFiles/firebase";
 const deleteSpending = (item) => {
   const dbh = myFirebase.firestore();
 
-  const yearWeek = item.year.toString() + item.week.toString();
   dbh
     .collection("spendings")
     .doc(item.id)
@@ -30,13 +29,25 @@ const deleteSpending = (item) => {
 
             // Deduct the totalSpending in dayTotal
             const oldTotalSpending = oldDayObj[0].totalSpending;
-            const newTotalSpending = oldTotalSpending - item.price;
+            const newTotalSpending = parseFloat(
+              (oldTotalSpending - item.price).toFixed(2)
+            );
+
+            // Deduct category total in dayTotal
+            const category = item.category.toLowerCase();
+            const oldCategoryTotal = oldDayObj[0][category];
+            const newCategoryTotal = parseFloat(
+              (oldCategoryTotal - item.price).toFixed(2)
+            );
 
             // Update the db
             dbh
               .collection("dayTotal")
               .doc(docId)
-              .update({ totalSpending: newTotalSpending });
+              .update({
+                totalSpending: newTotalSpending,
+                [category]: newCategoryTotal,
+              });
           } else {
             // Case 2
             console.log(
