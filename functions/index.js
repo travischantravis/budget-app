@@ -82,41 +82,38 @@ app.get("/api/day/total/new", async (req, res) => {
   console.log(oldData.length);
 
   // const run = await Promise.all(
-  oldData.slice(6, 7).map((data) => {
+  oldData.slice(40, 41).map((spendingData) => {
     // console.log(data.category, data.price, da);
     db.collection("dayTotal")
-      .where("timestamp", "==", data.date.seconds.toString())
+      .where("timestamp", "==", spendingData.date.seconds.toString())
       .get()
       .then(function (snapshot) {
-        const dayData = snapshot.docs[0];
-        const id = dayData.id;
-        const category = data.category.toLowerCase();
-        console.log(data);
-        console.log(dayData.data());
-        console.log("dayTotal", id);
+        const dayData = snapshot.docs[0].data();
+        const dayTotalId = snapshot.docs[0].id;
+        const category = spendingData.category.toLowerCase();
+        console.log(spendingData);
+        console.log(dayData);
+        console.log("dayTotal", dayTotalId);
 
-        let categoryTotal = data.price;
-        if (data[category]) {
-          categoryTotal += data[category];
+        let categoryTotal = spendingData.price;
+        if (dayData[category]) {
+          categoryTotal += dayData[category];
         }
-        console.log(category, dayData[category], data.price, categoryTotal);
-        db.collection("dayTotal")
-          .doc(id)
-          .update({
-            [category]: parseFloat(categoryTotal.toFixed(2)),
-          });
+        console.log(
+          category,
+          dayData[category],
+          spendingData.price,
+          categoryTotal
+        );
+        // db.collection("dayTotal")
+        //   .doc(dayTotalId)
+        //   .update({
+        //     [category]: parseFloat(categoryTotal.toFixed(2)),
+        //   });
       })
       .catch(function (error) {
         console.error("Error adding document: ", error);
       });
-    // db.collection("dayTotal")
-    //   .add(data)
-    //   .then(function (docRef) {
-    //     console.log("Document written with ID: ", docRef.id);
-    //   })
-    //   .catch(function (error) {
-    //     console.error("Error adding document: ", error);
-    //   });
   });
   // );
 

@@ -102,8 +102,8 @@ const YearScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    // getAllTotals();
-    foo();
+    getAllTotals();
+    // foo();
   }, []);
 
   return (
