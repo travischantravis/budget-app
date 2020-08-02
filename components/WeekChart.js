@@ -45,7 +45,7 @@ const WeekChart = ({ item }) => {
             padding={{ top: 40, left: 30, right: 40, bottom: 60 }}
           >
             <VictoryStack colorScale={["#72C7EC", "#1FBBD7", "#117DAC"]}>
-              {categoriesArray.map((category, index) => {
+              {categoriesArray.map((category) => {
                 return (
                   <VictoryBar
                     key={category}

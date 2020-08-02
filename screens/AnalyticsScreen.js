@@ -99,7 +99,6 @@ const AnalyticsScreen = ({ navigation }) => {
         formattedYearWeek.sort(
           (a, b) => parseInt(a.yearWeek) - parseInt(b.yearWeek)
         );
-        console.log(formattedYearWeek);
         setYearWeeks(formattedYearWeek);
         setIsRefreshing(false);
       })
