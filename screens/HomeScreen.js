@@ -16,7 +16,7 @@ const HomeScreen = ({ navigation }) => {
   const getAllTotals = () => {
     dbh
       .collection("dayTotal")
-      .where("yearWeek", "==", "202031") //currentYearWeek
+      .where("yearWeek", "==", currentYearWeek) //currentYearWeek
       .orderBy("timestamp")
       .get()
       .then((querySnapshot) => {
@@ -38,6 +38,15 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.topContainer}>
         <Text style={styles.topTitle}>This week's spending</Text>
         <Text style={styles.weekTotal}>${weekTotal}</Text>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Week", {
+              yearWeek: currentYearWeek,
+            })
+          }
+        >
+          <Text style={styles.learnmore}>Learn more</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -65,5 +74,9 @@ const styles = StyleSheet.create({
     color: "#000",
     fontWeight: "bold",
     fontSize: 30,
+  },
+  learnmore: {
+    fontSize: 20,
+    color: "lightblue",
   },
 });
